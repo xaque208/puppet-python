@@ -62,8 +62,8 @@ define python::pyvenv (
   if $ensure == 'present' {
 
     $virtualenv_cmd = $version ? {
-      'system' => "${python::exec_prefix}pyvenv",
-      default  => "${python::exec_prefix}pyvenv-${version}",
+      'system' => "pyvenv",
+      default  => "pyvenv-${version}",
     }
 
     if ( $systempkgs == true ) {
