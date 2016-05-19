@@ -5,8 +5,8 @@
   "summary": "Python Module",
   "license": "Apache-2.0",
   "source": "git://github.com/zleslie/puppet-python.git",
-  "project_page": "https://github.com/zleslie/puppet-python",
-  "issues_url": "https://github.com/zleslie/puppet-python/issues",
+  "project_page": "https://github.com/xaque208/puppet-python",
+  "issues_url": "https://github.com/xaque208/puppet-python/issues",
   "description": "Puppet module for Python",
   "data_provider": "hiera",
   "tags": [
