@@ -1,0 +1,16 @@
+---
+version: 4
+datadir: data
+hierarchy:
+  - name: "osfamily/osname/releasemajor"
+    backend: yaml
+    path: "os/%{facts.os.family}/%{facts.os.name}/%{facts.os.release.major}"
+  - name: "osfamily/osname"
+    backend: yaml
+    path: "os/%{facts.os.family}/%{facts.os.name}"
+  - name: "osfamily"
+    backend: yaml
+    path: "os/%{facts.os.family}"
+  - name: "common"
+    backend: yaml
+

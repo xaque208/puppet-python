@@ -1,93 +1,88 @@
-# == Define: python::virtualenv
+# This class handles creating Python virtualenvs
 #
-# Creates Python virtualenv.
-#
-# === Parameters
-#
-# [*ensure*]
+# @param ensure
 #  present|absent. Default: present
 #
-# [*version*]
+# @param version
 #  Python version to use. Default: system default
 #
-# [*requirements*]
+# @param requirements
 #  Path to pip requirements.txt file. Default: none
 #
-# [*systempkgs*]
+# @param systempkgs
 #  Copy system site-packages into virtualenv. Default: don't
 #  If virtualenv version < 1.7 this flag has no effect since
-# [*venv_dir*]
+#
+# @param venv_dir
 #  Directory to install virtualenv to. Default: $name
 #
-# [*distribute*]
+# @param distribute
 #  Include distribute in the virtualenv. Default: true
 #
-# [*index*]
+# @param index
 #  Base URL of Python package index. Default: none (http://pypi.python.org/simple/)
 #
-# [*owner*]
+# @param owner
 #  The owner of the virtualenv being manipulated. Default: root
 #
-# [*group*]
+# @param group
 #  The group relating to the virtualenv being manipulated. Default: root
 #
-# [*mode*]
+# @param mode
 # Optionally specify directory mode. Default: 0755
 #
-# [*proxy*]
+# @param [*proxy*]
 #  Proxy server to use for outbound connections. Default: none
 #
-# [*environment*]
+# @param [*environment*]
 #  Additional environment variables required to install the packages. Default: none
 #
-# [*path*]
+# @param [*path*]
 #  Specifies the PATH variable. Default: [ '/bin', '/usr/bin', '/usr/sbin' ]
 #
-# [*cwd*]
+# @param [*cwd*]
 #  The directory from which to run the "pip install" command. Default: undef
 #
-# [*timeout*]
+# @param [*timeout*]
 #  The maximum time in seconds the "pip install" command should take. Default: 1800
 #
-# [*extra_pip_args*]
+# @param [*extra_pip_args*]
 #  Extra arguments to pass to pip after requirements file.  Default: blank
 #
-# === Examples
-#
-# python::virtualenv { '/var/www/project1':
-#   ensure       => present,
-#   version      => 'system',
-#   requirements => '/var/www/project1/requirements.txt',
-#   proxy        => 'http://proxy.domain.com:3128',
-#   systempkgs   => true,
-#   index        => 'http://www.example.com/simple/'
-# }
-#
-# === Authors
-#
-# Sergey Stankevich
-# Shiva Poudel
+# @example
+#   python::virtualenv { '/var/www/project1':
+#     ensure       => present,
+#     version      => 'system',
+#     requirements => '/var/www/project1/requirements.txt',
+#     proxy        => 'http://proxy.domain.com:3128',
+#     systempkgs   => true,
+#     index        => 'http://www.example.com/simple/'
+#   }
 #
 define python::virtualenv (
-  $ensure           = present,
-  $version          = 'system',
-  $requirements     = false,
-  $systempkgs       = false,
-  $venv_dir         = $name,
-  $distribute       = true,
-  $index            = false,
-  $owner            = 'root',
-  $group            = '0',
-  $mode             = '0755',
-  $proxy            = false,
-  $environment      = [],
-  $path             = [ '/bin', '/usr/bin', '/usr/sbin', '/usr/local/bin' ],
-  $cwd              = undef,
-  $timeout          = 1800,
-  $extra_pip_args   = '',
-  $virtualenv       = undef
+  String $ensure         = present,
+  String $version        = 'system',
+  Boolean $requirements  = false,
+  Boolean $systempkgs    = false,
+  String $venv_dir       = $name,
+  Boolean $distribute    = true,
+  Boolean $index         = false,
+  String $owner          = 'root',
+  String $group          = '0',
+  String $mode           = '0755',
+  Boolean $proxy         = false,
+  Array $environment     = [],
+  Array $path            = [ '/bin', '/usr/bin', '/usr/sbin', '/usr/local/bin' ],
+  $cwd                   = undef,
+  Integer $timeout       = 1800,
+  String $extra_pip_args = '',
+  $virtualenv            = undef
 ) {
   include ::python
+
+  unless $::python::virtualenv == true {
+    fail('to use a virtualenv, you must set $python::virtualenv to true')
+  }
 
   if $ensure == 'present' {
     $python = $version ? {
@@ -119,15 +114,17 @@ define python::virtualenv (
     # --system-site-packages flag, default off for prior versions
     # Prior to version 1.7 the default was equal to --system-site-packages
     # and the flag --no-site-packages had to be passed to do the opposite
-    if (( versioncmp($::virtualenv_version,'1.7') > 0 ) and ( $systempkgs == true )) {
-      $system_pkgs_flag = '--system-site-packages'
-    } elsif (( versioncmp($::virtualenv_version,'1.7') < 0 ) and ( $systempkgs == false )) {
-      $system_pkgs_flag = '--no-site-packages'
-    } else {
-      $system_pkgs_flag = $systempkgs ? {
-        true    => '--system-site-packages',
-        false   => '--no-site-packages',
-        default => fail('Invalid value for systempkgs. Boolean value is expected')
+    if $::virtualenv_version {
+      if (( versioncmp($::virtualenv_version,'1.7') > 0 ) and ( $systempkgs == true )) {
+        $system_pkgs_flag = '--system-site-packages'
+      } elsif (( versioncmp($::virtualenv_version,'1.7') < 0 ) and ( $systempkgs == false )) {
+        $system_pkgs_flag = '--no-site-packages'
+      } else {
+        $system_pkgs_flag = $systempkgs ? {
+          true    => '--system-site-packages',
+          false   => '--no-site-packages',
+          default => fail('Invalid value for systempkgs. Boolean value is expected')
+        }
       }
     }
 
@@ -154,7 +151,7 @@ define python::virtualenv (
       mode   => $mode
     }
 
-    $pip_cmd = "${python::exec_prefix}${venv_dir}/bin/pip"
+    $pip_cmd = "${venv_dir}/bin/pip"
 
     exec { "python_virtualenv_${venv_dir}":
       command     => "true ${proxy_command} && ${used_virtualenv} ${system_pkgs_flag} -p ${python} ${venv_dir} && ${pip_cmd} wheel --help > /dev/null 2>&1 && { ${pip_cmd} wheel --version > /dev/null 2>&1 || wheel_support_flag='--no-use-wheel'; } ; { ${pip_cmd} --log ${venv_dir}/pip.log install ${pypi_index} ${proxy_flag} \$wheel_support_flag --upgrade pip ${distribute_pkg} || ${pip_cmd} --log ${venv_dir}/pip.log install ${pypi_index} ${proxy_flag}  --upgrade pip ${distribute_pkg} ;}",

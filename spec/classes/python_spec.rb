@@ -1,371 +1,176 @@
 require 'spec_helper'
 
-describe 'python', :type => :class do
-  context "on Debian OS" do
-    let :facts do
-      {
-        :id                     => 'root',
-        :kernel                 => 'Linux',
-        :lsbdistcodename        => 'squeeze',
-        :osfamily               => 'Debian',
-        :operatingsystem        => 'Debian',
-        :operatingsystemrelease => '6',
-        :path                   => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-        :concat_basedir         => '/dne',
-      }
-    end
+describe 'python' do
 
-    it { is_expected.to contain_class("python::install") }
-    # Base debian packages.
-    it { is_expected.to contain_package("python") }
-    it { is_expected.to contain_package("python-dev") }
-    it { is_expected.to contain_package("python-pip") }
-    # Basic python packages (from pip)
-    it { is_expected.to contain_package("python-virtualenv")}
+  on_supported_os.each do |os, facts|
+    context "on #{os}" do
+      let(:facts) { facts }
 
-    describe "with python::dev" do
-      context "true" do
-        let (:params) {{ :dev => true }} 
-        it { is_expected.to contain_package("python-dev").with_ensure('present') }
-      end
-      context "empty/default" do
-        it { is_expected.to contain_package("python-dev").with_ensure('absent') }
-      end
-    end
+      context "with system version" do
+        let(:params) {{
+          :pip => false,
+          :dev => false,
+          :virtualenv => false,
+          :version => 'system'
+        }}
 
-    describe "with manage_gunicorn" do
-      context "true" do
-        let (:params) {{ :manage_gunicorn => true }} 
-        it { is_expected.to contain_package("gunicorn") }
-      end
-      context "empty args" do
-        #let (:params) {{ :manage_gunicorn => '' }} 
-        it { is_expected.to contain_package("gunicorn") }
-      end
-      context "false" do
-        let (:params) {{ :manage_gunicorn => false }} 
-        it {is_expected.not_to contain_package("gunicorn")}
-      end
-    end
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_class("python::install") }
 
-    describe "with python::provider" do
-      context "pip" do
-        let (:params) {{ :provider => 'pip' }}
-        it { is_expected.to contain_package("virtualenv").with(
-          'provider' => 'pip'
-        )}
-        it { is_expected.to contain_package("pip").with(
-          'provider' => 'pip'
-        )}
-      end
-      
-      # python::provider
-      context "default" do
-        let (:params) {{ :provider => '' }}
-        it { is_expected.to contain_package("python-virtualenv")}
-        it { is_expected.to contain_package("python-pip")}
-        
-        describe "with python::virtualenv" do
-          context "true" do
-            let (:params) {{ :provider => '', :virtualenv => true }}
-            it { is_expected.to contain_package("python-virtualenv").with_ensure('present') }
-          end
-        end
-        
-        describe "without python::virtualenv" do
-          context "default/empty" do
-            let (:params) {{ :provider => '' }}
-            it { is_expected.to contain_package("python-virtualenv").with_ensure('absent') }
-          end
-        end
-      end
-    end
-    
-    describe "with python::dev" do
-      context "true" do
-        let (:params) {{ :dev => true }}
-        it { is_expected.to contain_package("python-dev").with_ensure('present') }
-      end
-      context "default/empty" do
-        it { is_expected.to contain_package("python-dev").with_ensure('absent') }
-      end
-    end
-  end
-  
-  context "on a Redhat 5 OS" do
-    let :facts do
-      {
-        :id => 'root',
-        :kernel => 'Linux',
-        :osfamily => 'RedHat',
-        :operatingsystem => 'RedHat',
-        :operatingsystemrelease => '5',
-        :concat_basedir => '/dne',
-        :path => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-      }
-    end
-    it { is_expected.to contain_class("python::install") }
-    # Base debian packages.
-    it { is_expected.to contain_package("python") }
-    it { is_expected.to contain_package("python-devel") }
-    it { is_expected.to contain_package("python-pip") }
-    # Basic python packages (from pip)
-    it { is_expected.to contain_package("python-virtualenv")}
-  
-    describe "with python::dev" do
-      context "true" do
-        let (:params) {{ :dev => true }}
-        it { is_expected.to contain_package("python-devel").with_ensure('present') }
-      end
-      context "empty/default" do
-        it { is_expected.to contain_package("python-devel").with_ensure('absent') }
-      end
-    end
-    
-    describe "with manage_gunicorn" do
-      context "true" do
-        let (:params) {{ :manage_gunicorn => true }} 
-        it { is_expected.to contain_package("gunicorn") }
-      end
-      context "empty args" do
-        #let (:params) {{ :manage_gunicorn => '' }} 
-        it { is_expected.to contain_package("gunicorn") }
-      end
-      context "false" do
-        let (:params) {{ :manage_gunicorn => false }} 
-        it {is_expected.not_to contain_package("gunicorn")}
-      end
-    end
+        context 'with dev' do
+          let(:params) {{
+            :version => 'system',
+            :dev => true,
+            :pip => false,
+            :virtualenv => false,
+          }}
 
-    describe "with python::provider" do
-      context "pip" do
-        let (:params) {{ :provider => 'pip' }}
-
-        it { is_expected.to contain_package("virtualenv").with(
-          'provider' => 'pip'
-        )}
-        it { is_expected.to contain_package("pip").with(
-          'provider' => 'pip'
-        )}
-      end
-      
-      # python::provider
-      context "default" do
-        let (:params) {{ :provider => '' }} 
-        it { is_expected.to contain_package("python-virtualenv")}
-        it { is_expected.to contain_package("python-pip")}
-        
-        describe "with python::virtualenv" do
-          context "true" do
-            let (:params) {{ :provider => '', :virtualenv => true }}
-            it { is_expected.to contain_package("python-virtualenv").with_ensure('present') }
-          end
-        end
-        
-        describe "with python::virtualenv" do
-          context "default/empty" do
-            let (:params) {{ :provider => '' }}
-            it { is_expected.to contain_package("python-virtualenv").with_ensure('absent') }
-          end
-        end
-      end
-    end
-    
-    describe "with python::dev" do
-      context "true" do
-        let (:params) {{ :dev => true }} 
-        it { is_expected.to contain_package("python-devel").with_ensure('present') }
-      end
-      context "default/empty" do
-        it { is_expected.to contain_package("python-devel").with_ensure('absent') }
-      end
-    end
-  end
-
-  context "on a SLES 11 SP3" do
-    let :facts do
-      {
-        :id => 'root',
-        :kernel => 'Linux',
-        :osfamily => 'Suse',
-        :operatingsystem => 'SLES',
-        :operatingsystemrelease => '11.3',
-        :concat_basedir => '/dne',
-        :path => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-      }
-    end
-    it { is_expected.to contain_class("python::install") }
-    # Base Suse packages.
-    it { is_expected.to contain_package("python") }
-    it { is_expected.to contain_package("python-devel") }
-    it { is_expected.to contain_package("python-pip") }
-    # Basic python packages (from pip)
-    it { is_expected.to contain_package("python-virtualenv")}
-
-    describe "with python::dev" do
-      context "true" do
-        let (:params) {{ :dev => true }}
-        it { is_expected.to contain_package("python-devel").with_ensure('present') }
-      end
-      context "empty/default" do
-        it { is_expected.to contain_package("python-devel").with_ensure('absent') }
-      end
-    end
-
-    describe "with manage_gunicorn" do
-      context "true" do
-        let (:params) {{ :manage_gunicorn => true }}
-        it { is_expected.to contain_package("gunicorn") }
-      end
-      context "empty args" do
-        #let (:params) {{ :manage_gunicorn => '' }}
-        it { is_expected.to contain_package("gunicorn") }
-      end
-      context "false" do
-        let (:params) {{ :manage_gunicorn => false }}
-        it {is_expected.not_to contain_package("gunicorn")}
-      end
-    end
-
-    describe "with python::provider" do
-      context "pip" do
-        let (:params) {{ :provider => 'pip' }}
-
-        it { is_expected.to contain_package("virtualenv").with(
-          'provider' => 'pip'
-        )}
-        it { is_expected.to contain_package("pip").with(
-          'provider' => 'pip'
-        )}
-      end
-
-      # python::provider
-      context "default" do
-        let (:params) {{ :provider => '' }}
-        it { is_expected.to contain_package("python-virtualenv")}
-        it { is_expected.to contain_package("python-pip")}
-
-        describe "with python::virtualenv" do
-          context "true" do
-            let (:params) {{ :provider => '', :virtualenv => true }}
-            it { is_expected.to contain_package("python-virtualenv").with_ensure('present') }
+          case facts[:osfamily]
+          when 'RedHat'
+            it { is_expected.to contain_package('python-devel') }
+          when 'Debian'
+            it { is_expected.to contain_package('python-dev') }
+          else
           end
         end
 
-        describe "with python::virtualenv" do
-          context "default/empty" do
-            let (:params) {{ :provider => '' }}
-            it { is_expected.to contain_package("python-virtualenv").with_ensure('absent') }
+        context 'with pip' do
+          let(:params) {{
+            :version => 'system',
+            :pip => true,
+            :dev => false,
+            :virtualenv => false,
+          }}
+
+          case facts[:kernel]
+          when 'Linux'
+            it { is_expected.to contain_package('python-pip') }
+          when 'FreeBSD'
+            it { is_expected.to contain_package('py27-pip') }
+          else
+            it { is_expected.to_not contain_package('py27-pip') }
+            it { is_expected.to_not contain_package('python-pip') }
+            it { is_expected.to_not contain_package('python3-pip') }
+          end
+
+        end
+
+        context 'with virtualenv' do 
+          let(:params) {{
+            :version => 'system',
+            :virtualenv => true,
+            :dev => false,
+            :pip => false,
+          }}
+
+          case facts[:kernel]
+          when 'Linux'
+            case facts[:lsbdistcodename]
+            when 'jessie'
+              it { is_expected.to contain_package('virtualenv') }
+            else
+              it { is_expected.to contain_package('python-virtualenv') }
+            end
+          when 'FreeBSD'
+            it { is_expected.to contain_package('py27-virtualenv') }
+          else
           end
         end
+
       end
-    end
 
-    describe "with python::dev" do
-      context "true" do
-        let (:params) {{ :dev => true }}
-        it { is_expected.to contain_package("python-devel").with_ensure('present') }
-      end
-      context "default/empty" do
-        it { is_expected.to contain_package("python-devel").with_ensure('absent') }
-      end
-    end
-  end
+      context "with a python3 version" do
+        three_version = {
+          'FreeBSD' => '34',
+          'Debian' => '3.4',
+          'OpenBSD' => '3.4.3',
+          'RedHat' => '3',
+        }
 
-  context "on FreeBSD OS" do
-    let :facts do
-      {
-          :id                     => 'root',
-          :kernel                 => 'FreeBSD',
-          :osfamily               => 'FreeBSD',
-          :operatingsystem        => 'FreeBSD',
-          :operatingsystemrelease => '10.2-RELEASE',
-          :path                   => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-          :concat_basedir         => '/dne',
-      }
-    end
+        let(:params) {{
+          :pip => false,
+          :dev => false,
+          :virtualenv => false,
+          :version => three_version[facts[:osfamily]],
+        }}
 
-    it { is_expected.to contain_class("python::install") }
-    # Base debian packages.
-    it { is_expected.to contain_package("python") }
-    it { is_expected.to_not contain_package("python-dev") }
-    # Python 2.7 system packages
-    it { is_expected.to contain_package("py27-virtualenv")}
+        it { is_expected.to compile.with_all_deps }
+        it { is_expected.to contain_class("python::install") }
+        case facts[:osfamily]
+        when 'FreeBSD'
+          it { is_expected.to contain_package('python3')}
+        else
+        end
 
-    context "with python 2" do
-      context "with pip" do
-        let(:params) {{:version => 'system', :pip => true}}
-        it { is_expected.to contain_package("py27-pip") }
-      end
-    end
+        context 'with dev' do
+          let(:params) {{
+            :pip => false,
+            :dev => true,
+            :virtualenv => false,
+            :version => three_version[facts[:osfamily]],
+          }}
+          case facts[:osfamily]
+          when 'RedHat'
+            it { is_expected.to contain_package('python3-devel') }
+          when 'Debian'
+            it { is_expected.to contain_package('python3.4-dev') }
+          else
+          end
+        end
 
-    context "with python 3" do
-      let (:params) {{:version => '3'}}
-      it { is_expected.to contain_package('python3')}
+        context 'with pip' do
+          let(:params) {{
+            :pip => true,
+            :dev => false,
+            :virtualenv => false,
+            :version => three_version[facts[:osfamily]],
+          }}
 
-      context "with pip" do
-        let (:params) {{:version => '3', :pip => true}}
-        it { is_expected.to contain_exec('install_pip34')}
-        it { is_expected.to_not contain_package("py27-pip") }
+          case facts[:osfamily]
+          when 'RedHat'
+            case facts[:operatingsystemmajrelease]
+            when '7'
+              it { is_expected.to contain_package('python-pip') }
+            else
+              it { is_expected.to contain_package('python3-pip') }
+            end
+          when 'Debian'
+            it { is_expected.to contain_package('python3-pip') }
+          when 'FreeBSD'
+            it { is_expected.to contain_exec('install_pip34')}
+            it { is_expected.to_not contain_package("py27-pip") }
+          else
+            it { is_expected.to_not contain_package('py27-pip') }
+            it { is_expected.to_not contain_package('python-pip') }
+          end
+
+        end
 
         context 'with virtualenv' do
-          let (:params) {{:version => '3', :pip => true, :virtualenv => true}}
-          it { is_expected.to contain_package("virtualenv").with_provider('pip') }
-        end
-      end
+          let(:params) {{
+            :pip => false,
+            :dev => false,
+            :virtualenv => true,
+            :version => three_version[facts[:osfamily]],
+          }}
 
-      context "with virtualenv and without pip" do
-        let (:params) {{:version => '3', :pip => false, :virtualenv => true}}
-        it { is_expected.to contain_notify("freebsd_virtualenv_needs_pip") }
-      end
-    end
-
-    describe "with manage_gunicorn" do
-      context "true" do
-        let (:params) {{ :manage_gunicorn => true }}
-        it { is_expected.to contain_package("gunicorn") }
-      end
-      context "empty args" do
-        #let (:params) {{ :manage_gunicorn => '' }}
-        it { is_expected.to contain_package("gunicorn") }
-      end
-      context "false" do
-        let (:params) {{ :manage_gunicorn => false }}
-        it {is_expected.not_to contain_package("gunicorn")}
-      end
-    end
-
-    describe "with python::provider" do
-      context "pip" do
-        let (:params) {{ :provider => 'pip' }}
-        it { is_expected.to contain_package("virtualenv").with(
-                                'provider' => 'pip'
-                            )}
-        it { is_expected.to contain_package("pip").with(
-                                'provider' => 'pip'
-                            )}
-      end
-
-      # python::provider
-      context "default" do
-        let (:params) {{ :provider => '', :version => 'system' }}
-        it { is_expected.to contain_package("py27-virtualenv")}
-        it { is_expected.to contain_package("py27-pip")}
-
-        describe "with python::virtualenv" do
-          context "true" do
-            let (:params) {{ :provider => '', :virtualenv => true }}
-            it { is_expected.to contain_package("py27-virtualenv").with_ensure('present') }
+          case facts[:kernel]
+          when 'Linux'
+            case facts[:lsbdistcodename]
+            when 'jessie'
+              it { is_expected.to contain_package('virtualenv') }
+            else
+              it { is_expected.to contain_package('python-virtualenv') }
+            end
+          when 'FreeBSD'
+            it { is_expected.to contain_package("virtualenv").with_provider('pip') }
+          else
           end
         end
 
-        describe "without python::virtualenv" do
-          context "default/empty" do
-            let (:params) {{ :provider => '' }}
-            it { is_expected.to contain_package("py27-virtualenv").with_ensure('absent') }
-          end
-        end
       end
+
     end
   end
+
 end

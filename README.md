@@ -1,78 +1,30 @@
-# puppet-python [![Build Status](https://travis-ci.org/stankevich/puppet-python.svg?branch=master)](https://travis-ci.org/stankevich/puppet-python)
+# Puppet-python
+[![Puppet Forge](https://img.shields.io/puppetforge/v/zleslie/python.svg)](https://forge.puppet.com/zleslie/python) [![Build Status](https://travis-ci.org/xaque208/puppet-python.svg?branch=master)](https://travis-ci.org/xaque208/puppet-python)
 
-Puppet module for installing and managing python, pip, virtualenvs and Gunicorn virtual hosts.
+Puppet module for installing and managing python, pip, and virtualenv.
 
-===
-
-# Compatibility #
-
-* Puppet v3 (with and without the future parser)
-* Puppet v4
-
-## Ruby versions
-
-* 1.8.7
-* 1.9.3
-* 2.0.0
-* 2.1.0
-
-## OS Distributions ##
-
-This module has been tested to work on the following systems.
-
-* Debian 6
-* Debian 7
-* Debian 8
-* EL 5
-* EL 6
-* EL 7
-* Suse 11
-* Ubuntu 10.04
-* Ubuntu 12.04
-* Ubuntu 14.04
-* FreeBSD 10.2
-
-===
+*This module was forked from [stankevich/puppet-python](https://github.com/stankevich/puppet-python)*
 
 ## Installation
 
 ```shell
-git submodule add https://github.com/stankevich/puppet-python.git /path/to/python
-```
-OR
-
-``` shell
-puppet module install stankevich-python
+puppet module install zleslie-python
 ```
 
 ## Usage
 
 ### python
 
-Installs and manages python, python-pip, python-dev, python-virtualenv and Gunicorn.
-
-**version** - Python version to install. Default: system default
-
-**pip** - Install python-pip. Default: true
-
-**dev** - Install python-dev. Default: false
-
-**virtualenv** - Install python-virtualenv. Default: false
-
-**gunicorn** - Install Gunicorn. Default: false
-
-**manage_gunicorn** - Allow Installation / Removal of Gunicorn. Default: true
-
-**use_epel** - Boolean to determine if the epel class is used. Default: true
+To install python, and optionally the pip, dev and virtualenv packages, use the
+`python` class.  See the class documentation for more detail.
 
 ```puppet
-  class { 'python' :
-    version    => 'system',
-    pip        => true,
-    dev        => true,
-    virtualenv => true,
-    gunicorn   => true,
-  }
+class { 'python' :
+  version    => 'system',
+  pip        => true,
+  dev        => true,
+  virtualenv => true,
+}
 ```
 
 ### python::pip
@@ -211,45 +163,6 @@ Creates Python3 virtualenv.
   }
 ```
 
-### python::gunicorn
-
-Manages Gunicorn virtual hosts.
-
-**ensure** - present/absent. Default: present
-
-**virtualenv** - Run in virtualenv, specify directory. Default: disabled
-
-**mode** - Gunicorn mode. wsgi/django. Default: wsgi
-
-**dir** - Application directory.
-
-**bind** - Bind on: 'HOST', 'HOST:PORT', 'unix:PATH'. Default: `unix:/tmp/gunicorn-$name.socket` or `unix:${virtualenv}/${name}.socket`
-
-**environment** - Set ENVIRONMENT variable. Default: none
-
-**appmodule** - Set the application module name for gunicorn to load when not using Django. Default: `app:app`
-
-**osenv** - Allows setting environment variables for the gunicorn service. Accepts a hash of 'key': 'value' pairs. Default: false
-
-**timeout** - Allows setting the gunicorn idle worker process time before being killed. The unit of time is seconds. Default: 30
-
-**template** - Which ERB template to use. Default: python/gunicorn.erb
-
-```puppet
-  python::gunicorn { 'vhost' :
-    ensure      => present,
-    virtualenv  => '/var/www/project1',
-    mode        => 'wsgi',
-    dir         => '/var/www/project1/current',
-    bind        => 'unix:/tmp/gunicorn.socket',
-    environment => 'prod',
-    appmodule   => 'app:app',
-    osenv       => { 'DBHOST' => 'dbserver.example.com' },
-    timeout     => 30,
-    template    => 'python/gunicorn.erb',
-  }
-```
-
 ### python::dotfile
 
 Manages arbitrary python dotiles with a simple config hash.
@@ -299,14 +212,7 @@ python::python_pips:
     virtualenv: "/opt/env2"
 ```
 
-### Using SCL packages from RedHat or CentOS
-
-To use this module with Linux distributions in the Red Hat family and python distributions
-from softwarecollections.org, set python::provider to 'rhscl' and python::version to the name 
-of the collection you want to use (e.g., 'python27', 'python33', or 'rh-python34').
-
 ## Release Notes
-
 **Version 1.7.10 Notes**
 
 Installation of python-pip previously defaulted to `false` and was not installed. This default is now `true` and python-pip is installed. To prevent the installation of python-pip specify `pip => false` as a parameter when instantiating the `python` puppet class.

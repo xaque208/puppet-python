@@ -1,17 +1,8 @@
-# == Class: python::install
+# This class installs core python packages.  This should only be used by
+# including the 'python' class.
 #
-# Installs core python packages
-#
-# === Examples
-#
-# include python::install
-#
-# === Authors
-#
-# Sergey Stankevich
-# Ashley Penney
-# Fotis Gimian
-# Garrett Honeycutt <code@garretthoneycutt.com>
+# @example
+#   include python::install
 #
 class python::install {
 
@@ -21,51 +12,7 @@ class python::install {
     default  => "python${python::version}",
   }
 
-  $pythondev = $::osfamily ? {
-    'RedHat' => "${python}-devel",
-    'Debian' => "${python}-dev",
-    'Suse'   => "${python}-devel",
-    default  => undef,
-  }
-
-  case $::kernel {
-    'Linux': {
-      $python_virtualenv = $::lsbdistcodename ? {
-        'jessie' => 'virtualenv',
-        default  => 'python-virtualenv',
-      }
-    }
-    'FreeBSD': {
-      if $::python::version =~ /^3/ {
-        if ! $::python::pip {
-          notify { 'freebsd_virtualenv_needs_pip':
-            message => 'FreeBSD with Python 3 requires pip to install virtualenv; set pip => true',
-          }
-        }
-        $python_virtualenv = 'virtualenv'
-      } else {
-        $python_virtualenv = 'py27-virtualenv'
-      }
-    }
-  }
-
-  # pip version: use only for installation via os package manager!
-  case $::kernel {
-    'Linux': {
-      if $::python::version =~ /^3/ {
-        $pip = 'python3-pip'
-      } else {
-        $pip = 'python-pip'
-      }
-    }
-    'FreeBSD': {
-      if $::python::version == 'system' or $::python::version =~ /^2/ {
-        $pip = 'py27-pip'
-      }
-    }
-    default: { }
-  }
-
+  $python_dev = python::dev_name()
   $dev_ensure = $python::dev ? {
     true    => present,
     default => absent,
@@ -76,141 +23,33 @@ class python::install {
     default => absent,
   }
 
-  $venv_ensure = $python::virtualenv ? {
+  $python_virtualenv = python::virtualenv_name()
+  $virtualenv_ensure = $python::virtualenv ? {
     true    => present,
     default => absent,
   }
 
-  # Install latest from pip if pip is the provider
-  case $python::provider {
-    pip: {
-      package { 'virtualenv': ensure => latest, provider => pip }
-      package { 'pip': ensure => latest, provider => pip }
-      package { "python==${python::version}": ensure => latest, provider => pip }
-    }
-    scl: {
-      # SCL is only valid in the RedHat family. If RHEL, package must be
-      # enabled using the subscription manager outside of puppet. If CentOS,
-      # the centos-release-SCL will install the repository.
-      $install_scl_repo_package = $::operatingsystem ? {
-          'CentOS' => present,
-          default  => absent,
+  if $python_virtualenv {
+    if $::osfamily == 'FreeBSD' and $::python::version =~ /^3/ {
+      package { $python_virtualenv:
+        ensure   => $virtualenv_ensure,
+        provider => 'pip',
       }
-
-      package { 'centos-release-SCL':
-        ensure => $install_scl_repo_package,
-        before => Package['scl-utils'],
-      }
-      package { 'scl-utils': ensure => latest, }
-      package { $::python::version:
-        ensure  => present,
-        require => Package['scl-utils'],
-      }
-      # This gets installed as a dependency anyway
-      # package { "${python::version}-python-virtualenv":
-      #   ensure  => $venv_ensure,
-      #   require => Package['scl-utils'],
-      # }
-      package { "${python::version}-scldev":
-        ensure  => $dev_ensure,
-        require => Package['scl-utils'],
-      }
-      if  $pip_ensure  {
-        exec { 'python-scl-pip-install':
-          require => Package['scl-utils'],
-          command => "${python::params::exec_prefix}easy_install pip",
-          path    => ['/usr/bin', '/bin'],
-          creates => "/opt/rh/${python::version}/root/usr/bin/pip",
-        }
-      }
-    }
-    rhscl: {
-      # rhscl is RedHat SCLs from softwarecollections.org
-      $scl_package = "rhscl-${::python::version}-epel-${::operatingsystemmajrelease}-${::architecture}"
-      package { $scl_package:
-        source   => "https://www.softwarecollections.org/en/scls/rhscl/${::python::version}/epel-${::operatingsystemmajrelease}-${::architecture}/download/${scl_package}.noarch.rpm",
-        provider => 'rpm',
-        tag      => 'python-scl-repo',
-      }
-
-      package { $::python::version:
-        ensure => present,
-        tag    => 'python-scl-package',
-      }
-
-      package { "${python::version}-scldev":
-        ensure => $dev_ensure,
-        tag    => 'python-scl-package',
-      }
-
-      if  $pip_ensure  {
-        exec { 'python-scl-pip-install':
-          command => "${python::exec_prefix}easy_install pip",
-          path    => ['/usr/bin', '/bin'],
-          creates => "/opt/rh/${python::version}/root/usr/bin/pip",
-        }
-      }
-      Package <| tag == 'python-scl-repo' |> ->
-      Package <| tag == 'python-scl-package' |> ->
-      Exec['python-scl-pip-install']
-    }
-    default: {
-      if $::osfamily == 'RedHat' {
-        if $pip_ensure == present {
-          if $python::use_epel == true {
-            include 'epel'
-            Class['epel'] -> Package[$pip]
-          }
-        }
-        if ($venv_ensure == present) and ($::operatingsystemrelease =~ /^6/) {
-          if $python::use_epel == true {
-            include 'epel'
-            Class['epel'] -> Package[$python_virtualenv]
-          }
-        }
-      }
-
-      if $::osfamily == 'FreeBSD' {
-        if $pip_ensure == present and $::python::version =~ /^3/ {
-          # https://docs.python.org/3.4/library/ensurepip.html
-          exec { 'install_pip34':
-            command => '/usr/local/bin/python3.4 -m ensurepip',
-            creates => '/usr/local/bin/pip3.4',
-            require => Package[$python],
-          }
-
-          file { '/usr/local/bin/pip':
-            ensure => link,
-            target => '/usr/local/bin/pip3.4'
-          }
-        }
-      }
-
-      if $python_virtualenv {
-        if $::osfamily == 'FreeBSD' and $::python::version =~ /^3/ {
-          package { $python_virtualenv:
-            ensure   => $venv_ensure,
-            provider => 'pip',
-          }
-        } else {
-          package { $python_virtualenv: ensure => $venv_ensure }
-        }
-      }
-      if $pip {
-        package { $pip: ensure => $pip_ensure }
-      }
-      if $pythondev {
-        package { $pythondev: ensure => $dev_ensure }
-      }
-      package { $python: ensure => present }
+    } else {
+      package { $python_virtualenv: ensure => $virtualenv_ensure }
     }
   }
 
-  if $python::manage_gunicorn {
-    $gunicorn_ensure = $python::gunicorn ? {
-      true    => present,
-      default => absent,
-    }
-    package { 'gunicorn': ensure => $gunicorn_ensure }
+  if $python_dev {
+    package { $python_dev: ensure => $dev_ensure }
   }
+
+  if $python::use_epel == true {
+    include 'epel'
+    Class['epel'] -> Package[$python]
+  }
+
+  python::ensure_pip($pip_ensure)
+
+  package { $python: ensure => present }
 }
