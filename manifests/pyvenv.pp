@@ -1,68 +1,47 @@
-# == Define: python::pyvenv
+# This class create a Python3 virtualenv using pyvenv.
 #
-# Create a Python3 virtualenv using pyvenv.
 #
-# === Parameters
+# @param ensure present|absent. Default: present
 #
-# [*ensure*]
-#  present|absent. Default: present
+# @param version Python version to use. Default: system default
 #
-# [*version*]
-#  Python version to use. Default: system default
+# @param systempkgsCopy system site-packages into virtualenv. Default: don't
 #
-# [*systempkgs*]
-#  Copy system site-packages into virtualenv. Default: don't
+# @param venv_dir Directory to install virtualenv to. Default: $name
 #
-# [*venv_dir*]
-#  Directory to install virtualenv to. Default: $name
+# @param owner The owner of the virtualenv being manipulated. Default: root
 #
-# [*owner*]
-#  The owner of the virtualenv being manipulated. Default: root
+# @param group The group relating to the virtualenv being manipulated. Default: root
 #
-# [*group*]
-#  The group relating to the virtualenv being manipulated. Default: root
+# @param mode Optionally specify directory mode. Default: 0755
 #
-# [*mode*]
-# Optionally specify directory mode. Default: 0755
-#
-# [*path*]
-#  Specifies the PATH variable. Default: [ '/bin', '/usr/bin', '/usr/sbin' ]
+# @param path Specifies the PATH variable. Default: [ '/bin', '/usr/bin', '/usr/sbin' ]
 
-# [*environment*]
-# Optionally specify environment variables for pyvenv
+# @param environment Optionally specify environment variables for pyvenv
 #
-# === Examples
-#
-# python::venv { '/var/www/project1':
-#   ensure       => present,
-#   version      => 'system',
-#   systempkgs   => true,
-# }
-#
-# === Authors
-#
-# Sergey Stankevich
-# Ashley Penney
-# Marc Fournier
-# Fotis Gimian
-# Seth Cleveland
+# @example
+#   python::venv { '/var/www/project1':
+#     ensure     => present,
+#     version    => 'system',
+#     systempkgs => true,
+#   }
 #
 define python::pyvenv (
-  $ensure           = present,
-  $version          = 'system',
-  $systempkgs       = false,
-  $venv_dir         = $name,
-  $owner            = 'root',
-  $group            = '0',
-  $mode             = '0755',
-  $path             = [ '/bin', '/usr/bin', '/usr/sbin', '/usr/local/bin' ],
-  $environment      = [],
+  $ensure      = present,
+  $version     = 'system',
+  $systempkgs  = false,
+  $venv_dir    = $name,
+  $owner       = 'root',
+  $group       = '0',
+  $mode        = '0755',
+  $path        = [ '/bin', '/usr/bin', '/usr/sbin', '/usr/local/bin' ],
+  $environment = [],
 ) {
 
   if $ensure == 'present' {
 
     $virtualenv_cmd = $version ? {
-      'system' => "pyvenv",
+      'system' => 'pyvenv',
       default  => "pyvenv-${version}",
     }
 

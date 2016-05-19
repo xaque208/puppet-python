@@ -1,64 +1,47 @@
-# == Define: python::requirements
+# This class installs and manages Python packages from requirements file.
 #
-# Installs and manages Python packages from requirements file.
+# @param requirements Path to the requirements file. Defaults to the resource
+# name
 #
-# === Parameters
+# @param virtualenv virtualenv to run pip in. Default: system-wide
 #
-# [*requirements*]
-#  Path to the requirements file. Defaults to the resource name
+# @param owner The owner of the virtualenv being manipulated. Default: root
 #
-# [*virtualenv*]
-#  virtualenv to run pip in. Default: system-wide
+# @param group The group relating to the virtualenv being manipulated. Default:
+# root
 #
-# [*owner*]
-#  The owner of the virtualenv being manipulated. Default: root
+# @param proxy Proxy server to use for outbound connections. Default: none
 #
-# [*group*]
-#  The group relating to the virtualenv being manipulated. Default: root
-#
-# [*proxy*]
-#  Proxy server to use for outbound connections. Default: none
-#
-# [*src*]
-# Pip --src parameter; if the requirements file contains --editable resources,
-# this parameter specifies where they will be installed. See the pip
+# @param src Pip --src parameter; if the requirements file contains --editable
+# resources, this parameter specifies where they will be installed. See the pip
 # documentation for more. Default: none (i.e. use the pip default).
 #
-# [*environment*]
-#  Additional environment variables required to install the packages. Default: none
+# @param environment Additional environment variables required to install the
+# packages. Default: none
 #
-# [*forceupdate*]
-#  Run a pip install requirements even if we don't receive an event from the
-# requirements file - Useful for when the requirements file is written as part of a
-# resource other than file (E.g vcsrepo)
+# @param forceupdate Run a pip install requirements even if we don't receive an
+# event from the requirements file - Useful for when the requirements file is
+# written as part of a resource other than file (E.g vcsrepo)
 #
-# [*cwd*]
-#  The directory from which to run the "pip install" command. Default: undef
+# @param cwd The directory from which to run the "pip install" command.
+# Default: undef
 #
-# [*extra_pip_args*]
-# Extra arguments to pass to pip after the requirements file
+# @param extra_pip_args Extra arguments to pass to pip after the requirements
+# file
 #
-# [*fix_requirements_owner*]
-# Change owner and group of requirements file. Default: true
+# @param fix_requirements_owner Change owner and group of requirements file.
+# Default: true
 #
-# [*log_dir*]
-# String. Log directory.
+# @param log_dir String. Log directory.
 #
-# [*timeout*]
-#  The maximum time in seconds the "pip install" command should take. Default: 1800
+# @param timeout The maximum time in seconds the "pip install" command should
+# take. Default: 1800
 #
-# === Examples
-#
-# python::requirements { '/var/www/project1/requirements.txt':
-#   virtualenv => '/var/www/project1',
-#   proxy      => 'http://proxy.domain.com:3128',
-# }
-#
-# === Authors
-#
-# Sergey Stankevich
-# Ashley Penney
-# Fotis Gimian
+# @example
+#   python::requirements { '/var/www/project1/requirements.txt':
+#     virtualenv => '/var/www/project1',
+#     proxy      => 'http://proxy.domain.com:3128',
+#   }
 #
 define python::requirements (
   $requirements           = $name,
@@ -94,7 +77,7 @@ define python::requirements (
   }
 
   $pip_env = $virtualenv ? {
-    'system' => "pip",
+    'system' => 'pip',
     default  => "${virtualenv}/bin/pip",
   }
 
