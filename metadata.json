@@ -1,12 +1,12 @@
 {
-  "name": "stankevich-python",
-  "version": "1.9.7",
-  "author": "stankevich",
+  "name": "zleslie-python",
+  "version": "2.0.0",
+  "author": "zleslie",
   "summary": "Python Module",
   "license": "Apache-2.0",
-  "source": "git://github.com/stankevich/puppet-python.git",
-  "project_page": "https://github.com/stankevich/puppet-python",
-  "issues_url": "https://github.com/stankevich/puppet-python/issues",
+  "source": "git://github.com/zleslie/puppet-python.git",
+  "project_page": "https://github.com/zleslie/puppet-python",
+  "issues_url": "https://github.com/zleslie/puppet-python/issues",
   "description": "Puppet module for Python",
   "data_provider": "hiera",
   "tags": [
