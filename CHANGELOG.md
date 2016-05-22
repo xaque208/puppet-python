@@ -1,6 +1,13 @@
 ## Unreleased
  - 
 
+## 2016-05-22 2.0.2
+### Summary
+This release contains minor ordering issues provisioning a new FreeBSD host.
+
+#### Fixes
+ - Fix ordering on pip and virtualenv installation
+
 ## 2016-05-19 2.0.1
 ### Summary
 This release contains minor lint fixes and some class documentation updates.
