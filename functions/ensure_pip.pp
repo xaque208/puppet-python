@@ -9,12 +9,13 @@ function python::ensure_pip($ensure) {
         exec { 'install_pip3':
           command => '/usr/local/bin/python3 -m ensurepip',
           creates => '/usr/local/bin/pip3',
-          require => Package[$python],
+          require => Package[$python::install::python],
         }
 
         file { '/usr/local/bin/pip':
-          ensure => link,
-          target => '/usr/local/bin/pip3'
+          ensure  => link,
+          target  => '/usr/local/bin/pip3',
+          require => Exec['install_pip3'],
         }
       }
     }
@@ -28,7 +29,7 @@ function python::ensure_pip($ensure) {
       if ($::python::install::virtualenv_ensure == present) and ($facts['os']['release']['major'] =~ /^6/) {
         if $python::use_epel == true {
           include 'epel'
-          Class['epel'] -> Package[$python_virtualenv]
+          Class['epel'] -> Package[$python::virtualenv::python_virtualenv]
         }
       }
     }

@@ -34,6 +34,7 @@ class python::install {
       package { $python_virtualenv:
         ensure   => $virtualenv_ensure,
         provider => 'pip',
+        require  => Exec['install_pip3'],
       }
     } else {
       package { $python_virtualenv: ensure => $virtualenv_ensure }

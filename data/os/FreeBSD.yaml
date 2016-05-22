@@ -1,5 +1,5 @@
 ---
-python::version: '34'
+python::version: '3'
 python::valid_versions:
   - '2'
   - '27'
