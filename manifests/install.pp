@@ -48,5 +48,13 @@ class python::install {
 
   python::ensure_pip($pip_ensure)
 
-  package { $python_name: ensure => present }
+
+  case $facts['kernel'] {
+    'OpenBSD': {
+      package { $python_name: ensure => $::python::version }
+    }
+    default: {
+      package { $python_name: ensure => present }
+    }
+  }
 }

@@ -135,7 +135,9 @@ describe 'python' do
 
         case facts[:operatingsystem]
         when 'FreeBSD'
-          it { is_expected.to contain_package('python3')}
+          it { is_expected.to contain_package('python34')}
+        when 'OpenBSD'
+          it { is_expected.to contain_package('python').with_ensure(three_version)}
         when 'Debian'
           it { is_expected.to contain_package('python3.4')}
 

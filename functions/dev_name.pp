@@ -1,4 +1,4 @@
-# This function contains the python development package name determiniation
+# This function contains the python development package name determination
 # logic.
 function python::dev_name() {
   case $facts['osfamily'] {
