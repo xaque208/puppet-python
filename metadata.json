@@ -51,6 +51,7 @@
     {
       "operatingsystem": "OpenBSD",
       "operatingsystemrelease": [
+        "5.9",
         "5.8"
       ]
     }
