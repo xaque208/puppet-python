@@ -1,10 +1,10 @@
 function python::dev_name() {
   case $facts['osfamily'] {
     'RedHat': {
-      $dev_name = "${::python::install::python}-devel"
+      $dev_name = "${::python::install::python_name}-devel"
     }
     'Debian': {
-      $dev_name = "${::python::install::python}-dev"
+      $dev_name = "${::python::install::python_name}-dev"
     }
     default: {
       $dev_name = undef

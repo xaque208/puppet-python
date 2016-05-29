@@ -43,10 +43,10 @@ class python::install {
 
   if $python::use_epel == true {
     include 'epel'
-    Class['epel'] -> Package[$python]
+    Class['epel'] -> Package[$python_name]
   }
 
   python::ensure_pip($pip_ensure)
 
-  package { $python: ensure => present }
+  package { $python_name: ensure => present }
 }

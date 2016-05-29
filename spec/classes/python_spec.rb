@@ -80,35 +80,75 @@ describe 'python' do
       end
 
       context "with a python3 version" do
-        three_version = {
-          'FreeBSD' => '34',
-          'Debian' => '3.4',
-          'OpenBSD' => '3.4.3',
-          'RedHat' => '3',
-        }
+
+        three_version = case facts[:operatingsystem]
+          when 'FreeBSD'
+            case facts[:operatingsystemmajrelease]
+            when '10'
+              '34'
+
+            end
+          when 'OpenBSD'
+            case facts[:kernelversion]
+            when '5.8'
+              '3.4.3'
+
+            when '5.9'
+                '3.4.4'
+
+            end
+          when 'Debian'
+            case facts[:operatingsystemmajrelease]
+            when '8'
+              '3.4'
+
+            end
+          when 'CentOS'
+            case facts[:operatingsystemmajrelease]
+            when '7'
+              '3'
+
+            end
+          when 'RedHat'
+            case facts[:operatingsystemmajrelease]
+            when '7'
+              '3'
+
+            end
+          else nil
+        end
+
+        if three_version.nil?
+          puts "skipping python3 tests on #{facts[:os]}"
+          next
+        end
 
         let(:params) {{
           :pip => false,
           :dev => false,
           :virtualenv => false,
-          :version => three_version[facts[:osfamily]],
+          :version => three_version,
         }}
 
         it { is_expected.to compile.with_all_deps }
         it { is_expected.to contain_class("python::install") }
-        case facts[:osfamily]
+
+        case facts[:operatingsystem]
         when 'FreeBSD'
           it { is_expected.to contain_package('python3')}
-        else
+        when 'Debian'
+          it { is_expected.to contain_package('python3.4')}
+
         end
 
-        context 'with dev' do
+        context 'when dev enabled is enabled' do
           let(:params) {{
             :pip => false,
             :dev => true,
             :virtualenv => false,
-            :version => three_version[facts[:osfamily]],
+            :version => three_version,
           }}
+
           case facts[:osfamily]
           when 'RedHat'
             it { is_expected.to contain_package('python3-devel') }
@@ -118,12 +158,12 @@ describe 'python' do
           end
         end
 
-        context 'with pip' do
+        context 'when pip is enabled' do
           let(:params) {{
             :pip => true,
             :dev => false,
             :virtualenv => false,
-            :version => three_version[facts[:osfamily]],
+            :version => three_version,
           }}
 
           case facts[:osfamily]
@@ -146,24 +186,27 @@ describe 'python' do
 
         end
 
-        context 'with virtualenv' do
+        context 'when virtualenv is enabled' do
           let(:params) {{
             :pip => false,
             :dev => false,
             :virtualenv => true,
-            :version => three_version[facts[:osfamily]],
+            :version => three_version,
           }}
 
-          case facts[:kernel]
-          when 'Linux'
-            case facts[:lsbdistcodename]
-            when 'jessie'
+          case facts[:operatingsystem]
+          when 'Debian'
+
+            case facts[:operatingsystemmajrelease]
+            when '8'
               it { is_expected.to contain_package('virtualenv') }
             else
               it { is_expected.to contain_package('python-virtualenv') }
+
             end
           when 'FreeBSD'
             it { is_expected.to contain_package("virtualenv").with_provider('pip') }
+
           else
           end
         end
