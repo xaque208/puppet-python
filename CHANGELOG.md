@@ -1,6 +1,14 @@
 ## Unreleased
  - 
 
+## 2016-05-29 2.1.0
+### Summary
+This release contains updates to support OpenBSD 5.9 and some testing improvements.
+
+#### Features
+ - OpenBSD 5.9 support
+ - Testing improvements for python3 package name
+
 ## 2016-05-22 2.0.2
 ### Summary
 This release contains minor ordering issues provisioning a new FreeBSD host.
