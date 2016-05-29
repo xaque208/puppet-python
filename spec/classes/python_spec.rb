@@ -65,8 +65,8 @@ describe 'python' do
 
           case facts[:kernel]
           when 'Linux'
-            case facts[:lsbdistcodename]
-            when 'jessie'
+            case facts[:operatingsystemmajrelease]
+            when '8'
               it { is_expected.to contain_package('virtualenv') }
             else
               it { is_expected.to contain_package('python-virtualenv') }

@@ -1,3 +1,5 @@
+# This function contains the python development package name determiniation
+# logic.
 function python::dev_name() {
   case $facts['osfamily'] {
     'RedHat': {

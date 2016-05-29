@@ -1,9 +1,11 @@
+# This function contains the python package name determination logic.
+#
 function python::virtualenv_name() {
   case $facts['kernel'] {
     'Linux': {
-      $python_virtualenv = $facts['lsbdistcodename'] ? {
-        'jessie' => 'virtualenv',
-        default  => 'python-virtualenv',
+      $python_virtualenv = $facts['operatingsystemmajrelease'] ? {
+        '8'     => 'virtualenv',
+        default => 'python-virtualenv',
       }
     }
     'FreeBSD': {

@@ -1,3 +1,5 @@
+# This function contains the pip package name determination logic.
+#
 function python::pip_name() {
   case $::kernel {
     'Linux': {
