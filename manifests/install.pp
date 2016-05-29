@@ -6,11 +6,7 @@
 #
 class python::install {
 
-  $python = $::python::version ? {
-    'system' => 'python',
-    'pypy'   => 'pypy',
-    default  => "python${python::version}",
-  }
+  $python_name = python::python_name()
 
   $python_dev = python::dev_name()
   $dev_ensure = $python::dev ? {
