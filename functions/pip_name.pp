@@ -7,11 +7,8 @@ function python::pip_name() {
         $pip_name = 'python-pip'
       } elsif $::python::version =~ /^3/ {
         if $facts['osfamily'] == 'RedHat' {
-          if $::os['release']['major'] == '7' {
-            $pip_name = 'python-pip'
-          } else {
-            $pip_name = 'python3-pip'
-          }
+          # As of 2016-05-31 RedHat osfamilies curl get-pip.py to install python3
+          $pip_name = undef
         } else {
           $pip_name = 'python3-pip'
         }
