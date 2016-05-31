@@ -1,6 +1,20 @@
 ## Unreleased
  - 
 
+## 2016-05-31 2.2.0
+This release contains updates to virtualenv and pip handling under python3 on
+certain platforms.
+
+#### Features
+ - Drop support for Debian oldstable
+
+#### Fixes
+ - Installation of pip3 on CentOS now uses get-pip.py from the pypa.io
+ - Installation of virtualenv under python3 now requires pip when required
+ - Package names on several platforms are updated for accuracy for virtualenv
+ - Improvements to testing for pip + virtualenv
+
+
 ## 2016-05-29 2.1.0
 ### Summary
 This release contains updates to support OpenBSD 5.9 and some testing improvements.
