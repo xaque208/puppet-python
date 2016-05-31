@@ -19,22 +19,9 @@ class python::install {
     default => absent,
   }
 
-  $python_virtualenv = python::virtualenv_name()
   $virtualenv_ensure = $python::virtualenv ? {
     true    => present,
     default => absent,
-  }
-
-  if $python_virtualenv {
-    if $::osfamily == 'FreeBSD' and $::python::version =~ /^3/ {
-      package { $python_virtualenv:
-        ensure   => $virtualenv_ensure,
-        provider => 'pip',
-        require  => Exec['install_pip3'],
-      }
-    } else {
-      package { $python_virtualenv: ensure => $virtualenv_ensure }
-    }
   }
 
   if $python_dev {
@@ -47,7 +34,7 @@ class python::install {
   }
 
   python::ensure_pip($pip_ensure)
-
+  python::ensure_virtualenv($virtualenv_ensure)
 
   case $facts['kernel'] {
     'OpenBSD': {

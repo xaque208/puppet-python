@@ -92,9 +92,14 @@ define python::virtualenv (
     }
 
     if $virtualenv == undef {
-      $used_virtualenv = $version ? {
-        'system' => 'virtualenv',
-        default  => "virtualenv-${version}",
+
+      if $facts['osfamily'] == 'RedHat' {
+        $used_virtualenv = 'virtualenv'
+      } else {
+        $used_virtualenv = $version ? {
+          'system' => 'virtualenv',
+          default  => "virtualenv-${version}",
+        }
       }
     } else {
       $used_virtualenv = $virtualenv

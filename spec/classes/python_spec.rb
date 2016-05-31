@@ -63,14 +63,10 @@ describe 'python' do
             :pip => false,
           }}
 
-          case facts[:kernel]
-          when 'Linux'
-            case facts[:operatingsystemmajrelease]
-            when '8'
-              it { is_expected.to contain_package('virtualenv') }
-            else
-              it { is_expected.to contain_package('python-virtualenv') }
-            end
+          case facts[:operatingsystem]
+          when 'Debian'
+            it { is_expected.to contain_package('python-virtualenv') }
+
           when 'FreeBSD'
             it { is_expected.to contain_package('py27-virtualenv') }
           else
@@ -172,9 +168,7 @@ describe 'python' do
           when 'RedHat'
             case facts[:operatingsystemmajrelease]
             when '7'
-              it { is_expected.to contain_package('python-pip') }
-            else
-              it { is_expected.to contain_package('python3-pip') }
+              it { is_expected.to contain_exec('install_pip3').with_command('/bin/curl https://bootstrap.pypa.io/get-pip.py | /bin/python3')}
             end
           when 'Debian'
             it { is_expected.to contain_package('python3-pip') }
@@ -198,21 +192,36 @@ describe 'python' do
 
           case facts[:operatingsystem]
           when 'Debian'
+            it { is_expected.to contain_package('python3-virtualenv') }
 
-            case facts[:operatingsystemmajrelease]
-            when '8'
-              it { is_expected.to contain_package('virtualenv') }
-            else
-              it { is_expected.to contain_package('python-virtualenv') }
-
-            end
           when 'FreeBSD'
-            it { is_expected.to contain_package("virtualenv").with_provider('pip') }
+            it { is_expected.to raise_error() }
+
+          when 'RedHat'
+            it { is_expected.to raise_error() }
 
           else
           end
         end
 
+        context 'when virtualenv and pip are enabled' do
+          let(:params) {{
+            :pip => true,
+            :dev => false,
+            :virtualenv => true,
+            :version => three_version,
+          }}
+
+          case facts[:operatingsystem]
+          when 'FreeBSD'
+            it { is_expected.to contain_package("virtualenv").with_provider('pip') }
+
+          when 'RedHat'
+            it { is_expected.to contain_package("virtualenv").with_provider('pip3') }
+
+          else
+          end
+        end
       end
 
     end

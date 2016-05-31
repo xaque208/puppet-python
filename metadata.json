@@ -24,8 +24,7 @@
     {
       "operatingsystem": "Debian",
       "operatingsystemrelease": [
-        "8",
-        "7"
+        "8"
       ]
     },
     {
@@ -45,7 +44,6 @@
       "operatingsystem": "FreeBSD",
       "operatingsystemrelease": [
         "10.3"
-
       ]
     },
     {

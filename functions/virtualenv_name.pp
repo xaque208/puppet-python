@@ -3,16 +3,32 @@
 function python::virtualenv_name() {
   case $facts['kernel'] {
     'Linux': {
-      $python_virtualenv = $facts['operatingsystemmajrelease'] ? {
-        '8'     => 'virtualenv',
-        default => 'python-virtualenv',
+      if $facts['operatingisystem'] == 'Debian' {
+        if $::python::version =~ /^3/ {
+          $virtualenv_name = 'python3-virtualenv'
+        } else {
+          $virtualenv_name = 'python-virtualenv'
+        }
+      } elsif $facts['osfamily'] == 'RedHat' {
+        if $::python::version =~ /^3/ {
+          # Use the pip name when on python3
+          $virtualenv_name = 'virtualenv'
+        } else {
+          $virtualenv_name = 'python-virtualenv'
+        }
+      } else {
+        if $::python::version =~ /^3/ {
+          $virtualenv_name = 'python3-virtualenv'
+        } else {
+          $virtualenv_name = 'python-virtualenv'
+        }
       }
     }
     'FreeBSD': {
       if $::python::version =~ /^3/ {
-        $python_virtualenv = 'virtualenv'
+        $virtualenv_name = 'virtualenv'
       } else {
-        $python_virtualenv = 'py27-virtualenv'
+        $virtualenv_name = 'py27-virtualenv'
       }
     }
   }

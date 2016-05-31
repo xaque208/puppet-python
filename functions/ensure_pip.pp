@@ -9,7 +9,7 @@ function python::ensure_pip($ensure) {
         exec { 'install_pip3':
           command => '/usr/local/bin/python3 -m ensurepip',
           creates => '/usr/local/bin/pip3',
-          require => Package[$python::install::python],
+          require => Package[$python::install::python_name],
         }
 
         file { '/usr/local/bin/pip':
@@ -23,15 +23,18 @@ function python::ensure_pip($ensure) {
       if $ensure == present {
         if $python::use_epel == true {
           include 'epel'
-          Class['epel'] -> Package[$pip_name]
+          #Class['epel'] -> Package[$pip_name]
         }
       }
-      if ($::python::install::virtualenv_ensure == present) and ($facts['os']['release']['major'] =~ /^6/) {
-        if $python::use_epel == true {
-          include 'epel'
-          Class['epel'] -> Package[$python::virtualenv::python_virtualenv]
+
+      if $ensure == present and $::python::version =~ /^3/ {
+        exec { 'install_pip3':
+          command => '/bin/curl https://bootstrap.pypa.io/get-pip.py | /bin/python3',
+          creates => '/bin/pip3',
+          require => Package[$python::install::python_name],
         }
       }
+
     }
   }
 
