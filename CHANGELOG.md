@@ -1,6 +1,12 @@
 ## Unreleased
  - 
 
+## 2016-07-20 2.2.1
+This release contains updates to the hierarchy.
+
+#### Features
+  - Drop using os.release.minor from the hierarchy for more portability
+
 ## 2016-05-31 2.2.0
 This release contains updates to virtualenv and pip handling under python3 on
 certain platforms.
