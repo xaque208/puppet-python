@@ -8,12 +8,7 @@
   "project_page": "https://github.com/xaque208/puppet-python",
   "issues_url": "https://github.com/xaque208/puppet-python/issues",
   "description": "Puppet module for Python",
-  "data_provider": "hiera",
-  "tags": [
-    "python",
-    "pip",
-    "virtualenv"
-  ],
+  "tags": [ "python", "pip", "virtualenv" ],
   "operatingsystem_support": [
     {
       "operatingsystem": "CentOS",
@@ -63,5 +58,6 @@
   "dependencies": [
     {"name":"puppetlabs/stdlib","version_requirement":">= 4.6.0 < 6.0.0"},
     {"name":"stahnma/epel","version_requirement":">= 1.0.1 < 2.0.0"}
-  ]
+  ],
+  "data_provider": "hiera"
 }
