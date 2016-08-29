@@ -1,6 +1,5 @@
 function python::ensure_pip($ensure) {
 
-
   $pip_name = python::pip_name()
 
   case $facts['osfamily'] {
