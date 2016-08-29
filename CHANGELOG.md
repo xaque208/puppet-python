@@ -1,6 +1,9 @@
 ## Unreleased
  - 
 
+## 2016-08-29 2.3.1
+This release contains a fix for 2.3.0 incorrectly handling resource dependencies.
+
 ## 2016-08-29 2.3.0
 This release replaces the pip installation on FreeBSD for python3 versions.
 
