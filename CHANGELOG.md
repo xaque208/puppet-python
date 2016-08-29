@@ -1,6 +1,13 @@
 ## Unreleased
  - 
 
+## 2016-08-29 2.3.0
+This release replaces the pip installation on FreeBSD for python3 versions.
+
+### Features
+ - Installation of pip3 on FreeBSD no longer uses an exec resource
+ - Include more Puppet versions in testing
+
 ## 2016-07-20 2.2.1
 This release contains updates to the hierarchy.
 
