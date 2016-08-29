@@ -173,8 +173,8 @@ describe 'python' do
           when 'Debian'
             it { is_expected.to contain_package('python3-pip') }
           when 'FreeBSD'
-            it { is_expected.to contain_exec('install_pip34')}
-            it { is_expected.to_not contain_package("py27-pip") }
+            #it { is_expected.to contain_exec('install_pip34')}
+            it { is_expected.to_not contain_package("py34-pip") }
           else
             it { is_expected.to_not contain_package('py27-pip') }
             it { is_expected.to_not contain_package('python-pip') }

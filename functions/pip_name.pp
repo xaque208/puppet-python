@@ -5,7 +5,7 @@ function python::pip_name() {
     'Linux': {
       if $::python::version == 'system' {
         $pip_name = 'python-pip'
-      } elsif $::python::version =~ /^3/ {
+      } elsif $::python::version =~ /^3.*/ {
         if $facts['osfamily'] == 'RedHat' {
           # As of 2016-05-31 RedHat osfamilies curl get-pip.py to install python3
           $pip_name = undef
@@ -17,8 +17,8 @@ function python::pip_name() {
       }
     }
     'FreeBSD': {
-      if $::python::version == 'system' or $::python::version =~ /^2/ {
-        $pip_name = 'py27-pip'
+      if $::python::version == 'system' or $::python::version =~ /^[23].*/ {
+        $pip_name = "py${::python::version}-pip"
       } else {
         $pip_name = undef
       }
