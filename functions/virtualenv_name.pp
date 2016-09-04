@@ -25,10 +25,12 @@ function python::virtualenv_name() {
       }
     }
     'FreeBSD': {
-      if $::python::version =~ /^3/ {
-        $virtualenv_name = 'virtualenv'
+      if $::python::version == 'system' {
+        $pip_name = "py27-virtualenv"
+      } elsif $::python::version =~ /^[23].*/ {
+        $pip_name = "py${::python::version}-virtualenv"
       } else {
-        $virtualenv_name = 'py27-virtualenv'
+        $pip_name = undef
       }
     }
   }
