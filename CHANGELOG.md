@@ -1,6 +1,15 @@
 ## Unreleased
  - 
 
+## 2016-09-04 2.4.0
+This release contains test fixes for FreeBSD and changes to package
+installation on FreeBSD.
+
+### Features
+ - Fix testing for FreeBSD
+ - Installing virtualenv uses the package now in place of pip on FreeBSD
+ - Pip is no longer a requirement for installing pip on FreeBSD
+
 ## 2016-08-29 2.3.1
 This release contains a fix for 2.3.0 incorrectly handling resource dependencies.
 
