@@ -1,6 +1,9 @@
 ## Unreleased
  - 
 
+## 2016-09-04 2.4.1
+This release contains data to support OpenBSd 6.0.
+
 ## 2016-09-04 2.4.0
 This release contains test fixes for FreeBSD and changes to package
 installation on FreeBSD.
