@@ -92,6 +92,9 @@ describe 'python' do
             when '5.9'
                 '3.4.4'
 
+            when '6.0'
+                '3.5.2'
+
             end
           when 'Debian'
             case facts[:operatingsystemmajrelease]
