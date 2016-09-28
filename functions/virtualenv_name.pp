@@ -33,5 +33,14 @@ function python::virtualenv_name() {
         $pip_name = undef
       }
     }
+    'OpenBSD': {
+      if $::python::version == 'system' or $::python::version =~ /^[2].*/ {
+        $pip_name = "py-virtualenv"
+      } elsif $::python::version =~ /^[3].*/ {
+        $pip_name = "py3-virtualenv"
+      } else {
+        $pip_name = undef
+      }
+    }
   }
 }
