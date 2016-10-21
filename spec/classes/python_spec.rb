@@ -69,6 +69,10 @@ describe 'python' do
 
           when 'FreeBSD'
             it { is_expected.to contain_package('py27-virtualenv') }
+
+          when 'OpenBSD'
+            it { is_expected.to contain_package('py-virtualenv') }
+
           else
           end
         end
@@ -196,11 +200,14 @@ describe 'python' do
           when 'Debian'
             it { is_expected.to contain_package('python3-virtualenv') }
 
+          when 'RedHat'
+            it { is_expected.to raise_error() }
+
           when 'FreeBSD'
             it { is_expected.to contain_package('py34-virtualenv') }
 
-          when 'RedHat'
-            it { is_expected.to raise_error() }
+          when 'OpenBSD'
+            it { is_expected.to contain_package('py3-virtualenv') }
 
           else
           end
@@ -215,11 +222,14 @@ describe 'python' do
           }}
 
           case facts[:operatingsystem]
+          when 'RedHat'
+            it { is_expected.to contain_package("virtualenv").with_provider('pip3') }
+
           when 'FreeBSD'
             it { is_expected.to contain_package("py34-virtualenv") }
 
-          when 'RedHat'
-            it { is_expected.to contain_package("virtualenv").with_provider('pip3') }
+          when 'OpenBSD'
+            it { is_expected.to contain_package('py3-virtualenv') }
 
           else
           end
