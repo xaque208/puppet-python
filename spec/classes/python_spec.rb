@@ -45,8 +45,13 @@ describe 'python' do
           case facts[:kernel]
           when 'Linux'
             it { is_expected.to contain_package('python-pip') }
+
           when 'FreeBSD'
             it { is_expected.to contain_package('py27-pip') }
+
+          when 'OpenBSd'
+            it { is_expected.to contain_package('py-pip') }
+
           else
             it { is_expected.to_not contain_package('py27-pip') }
             it { is_expected.to_not contain_package('python-pip') }
@@ -181,6 +186,9 @@ describe 'python' do
             it { is_expected.to contain_package('python3-pip') }
           when 'FreeBSD'
             it { is_expected.to contain_package("py34-pip") }
+          when 'OpenBSD'
+            it { is_expected.to contain_package('py3-pip') }
+
           else
             it { is_expected.to_not contain_package('py27-pip') }
             it { is_expected.to_not contain_package('python-pip') }
