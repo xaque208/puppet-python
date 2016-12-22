@@ -49,7 +49,7 @@ describe 'python' do
           when 'FreeBSD'
             it { is_expected.to contain_package('py27-pip') }
 
-          when 'OpenBSd'
+          when 'OpenBSD'
             it { is_expected.to contain_package('py-pip') }
 
           else
