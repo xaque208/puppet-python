@@ -29,13 +29,18 @@ class python (
   Boolean $dev,
   Boolean $virtualenv,
   String $version,
-  Array $valid_versions  = [],
-  Boolean $use_epel      = false,
+  Array $valid_versions = [],
+  Boolean $use_epel     = false,
 ) {
 
   unless $version == 'system' or $version in $valid_versions {
     fail("Python version ${version} not supported on ${facts['os']['name']}: ${valid_versions} ${facts['os']}")
   }
+
+  $version_data = python::version_data($version)
+
+  $virtualenv_cmd = $version_data['virtualenv_cmd']
+  $virtualenv_package = $version_data['virtualenv_package']
 
   contain python::install
   contain python::config

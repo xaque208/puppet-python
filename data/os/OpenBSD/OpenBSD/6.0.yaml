@@ -4,3 +4,15 @@ python::valid_versions:
   - '2.7.12'
   - '3.4.5'
   - '3.5.2'
+
+python::version_data:
+  '3.5.2':
+    virtualenv_package: 'py3-virtualenv'
+    virtualenv_cmd: 'virtualenv-3'
+  '3.4.5':
+    virtualenv_package: 'py3-virtualenv'
+    virtualenv_cmd: 'virtualenv-3'
+  '2.7.12':
+    virtualenv_package: 'py-virtualenv'
+    virtualenv_cmd: 'virtualenv'
+
