@@ -15,7 +15,7 @@ function python::ensure_pip($ensure) {
         exec { 'install_pip3':
           command => '/bin/curl https://bootstrap.pypa.io/get-pip.py | /bin/python3',
           creates => '/bin/pip3',
-          require => Package[$python::install::python_name],
+          require => Package[$python::install::python_package],
         }
       }
 

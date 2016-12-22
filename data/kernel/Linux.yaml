@@ -1,0 +1,4 @@
+---
+python::version_defaults:
+  virtualenv_package: 'python-virtualenv'
+  virtualenv_cmd: 'virtualenv'

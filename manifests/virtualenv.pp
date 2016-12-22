@@ -48,7 +48,7 @@
 #
 # @param [*extra_pip_args*]
 #  Extra arguments to pass to pip after requirements file.  Default: blank
-#
+
 # @example
 #   python::virtualenv { '/var/www/project1':
 #     ensure       => present,
@@ -61,7 +61,7 @@
 #
 define python::virtualenv (
   String $ensure         = present,
-  String $version        = 'system',
+  String $version        = 'system', # TODO: This doesn't look to work
   Boolean $requirements  = false,
   Boolean $systempkgs    = false,
   String $venv_dir       = $name,
@@ -76,11 +76,11 @@ define python::virtualenv (
   $cwd                   = undef,
   Integer $timeout       = 1800,
   String $extra_pip_args = '',
-  $virtualenv            = undef
+  $virtualenv            = undef,
 ) {
   include ::python
 
-  unless $::python::virtualenv == true {
+  unless $::python::virtualenv {
     fail('to use a virtualenv, you must set $python::virtualenv to true')
   }
 
@@ -91,18 +91,10 @@ define python::virtualenv (
       default  => "python${version}",
     }
 
-    if $virtualenv == undef {
-
-      if $facts['osfamily'] == 'RedHat' {
-        $used_virtualenv = 'virtualenv'
-      } else {
-        $used_virtualenv = $version ? {
-          'system' => 'virtualenv',
-          default  => "virtualenv-${version}",
-        }
-      }
+    if $virtualenv {
+      $virtualenv_cmd = $virtualenv
     } else {
-      $used_virtualenv = $virtualenv
+      $virtualenv_cmd = $::python::virtualenv_cmd
     }
 
     $proxy_flag = $proxy ? {
@@ -116,29 +108,36 @@ define python::virtualenv (
     }
 
     # Virtualenv versions prior to 1.7 do not support the
-    # --system-site-packages flag, default off for prior versions
-    # Prior to version 1.7 the default was equal to --system-site-packages
-    # and the flag --no-site-packages had to be passed to do the opposite
-    if $::virtualenv_version {
-      if (( versioncmp($::virtualenv_version,'1.7') > 0 ) and ( $systempkgs == true )) {
-        $system_pkgs_flag = '--system-site-packages'
-      } elsif (( versioncmp($::virtualenv_version,'1.7') < 0 ) and ( $systempkgs == false )) {
-        $system_pkgs_flag = '--no-site-packages'
-      } else {
-        $system_pkgs_flag = $systempkgs ? {
-          true    => '--system-site-packages',
-          false   => '--no-site-packages',
-          default => fail('Invalid value for systempkgs. Boolean value is expected')
-        }
-      }
+    # --system-site-packages flag, default off for prior versions Prior to
+    # version 1.7 the default was equal to --system-site-packages and the flag
+    # --no-site-packages had to be passed to do the opposite
+
+    # TODO: This code doesn't look to work for the non-system case, since the
+    # fact 'virtualenv_version' simply executes 'virtualenv' to determine the
+    # version, so any setting of version in this class would mean this logic
+    # doesn't work.  Likely this will be dropping support for older virtualenv
+    # and just fail if we don't find a version that handles the case we need.
+
+    #if $facts['virtualenv_version'] {
+    #  if (( versioncmp($facts['virtualenv_version'],'1.7') > 0 ) and ( $systempkgs == true )) {
+    #    $system_pkgs_flag = '--system-site-packages'
+    #  } elsif (( versioncmp($facts['virtualenv_version'],'1.7') < 0 ) and ( $systempkgs == false )) {
+    #    $system_pkgs_flag = '--no-site-packages'
+    #  } else {
+    #  }
+    #}
+    $system_pkgs_flag = $systempkgs ? {
+      true    => '--system-site-packages',
+      false   => undef,
     }
 
     $distribute_pkg = $distribute ? {
       true     => 'distribute',
       default  => 'setuptools',
     }
+
     $pypi_index = $index ? {
-      false   => '',
+      false   => undef,
       default => "-i ${index}",
     }
 
@@ -158,8 +157,19 @@ define python::virtualenv (
 
     $pip_cmd = "${venv_dir}/bin/pip"
 
+    $virtualenv_create_args = [
+      "true ${proxy_command} &&",
+      $virtualenv_cmd,
+      $system_pkgs_flag,
+      "-p ${python}",
+      "${venv_dir} &&",
+      "${pip_cmd} wheel --help > /dev/null 2>&1 &&",
+      "{ ${pip_cmd} wheel --version > /dev/null 2>&1 || wheel_support_flag='--no-use-wheel'; };",
+      "{ ${pip_cmd} --log ${venv_dir}/pip.log install ${pypi_index} ${proxy_flag} \$wheel_support_flag --upgrade pip ${distribute_pkg} || ${pip_cmd} --log ${venv_dir}/pip.log install ${pypi_index} ${proxy_flag}  --upgrade pip ${distribute_pkg} ;}",
+    ]
+
     exec { "python_virtualenv_${venv_dir}":
-      command     => "true ${proxy_command} && ${used_virtualenv} ${system_pkgs_flag} -p ${python} ${venv_dir} && ${pip_cmd} wheel --help > /dev/null 2>&1 && { ${pip_cmd} wheel --version > /dev/null 2>&1 || wheel_support_flag='--no-use-wheel'; } ; { ${pip_cmd} --log ${venv_dir}/pip.log install ${pypi_index} ${proxy_flag} \$wheel_support_flag --upgrade pip ${distribute_pkg} || ${pip_cmd} --log ${venv_dir}/pip.log install ${pypi_index} ${proxy_flag}  --upgrade pip ${distribute_pkg} ;}",
+      command     => $virtualenv_create_args.delete_undef_values().join(' '),
       user        => $owner,
       creates     => "${venv_dir}/bin/activate",
       path        => $path,
