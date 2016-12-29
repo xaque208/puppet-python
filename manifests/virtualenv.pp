@@ -61,7 +61,7 @@
 #
 define python::virtualenv (
   String $ensure         = present,
-  String $version        = 'system', # This doesn't look to work
+  String $version        = 'system', # TODO: This doesn't look to work
   Boolean $requirements  = false,
   Boolean $systempkgs    = false,
   String $venv_dir       = $name,
@@ -91,10 +91,10 @@ define python::virtualenv (
       default  => "python${version}",
     }
 
-    if $virtualenv == undef {
-      $virtualenv_cmd = $::python::virtualenv_cmd
-    } else {
+    if $virtualenv {
       $virtualenv_cmd = $virtualenv
+    } else {
+      $virtualenv_cmd = $::python::virtualenv_cmd
     }
 
     $proxy_flag = $proxy ? {
