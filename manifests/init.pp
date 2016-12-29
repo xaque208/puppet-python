@@ -39,6 +39,7 @@ class python (
 
   $version_data = python::version_data($version)
 
+  # Useful variables for the default version 
   $virtualenv_cmd = $version_data['virtualenv_cmd']
   $virtualenv_package = $version_data['virtualenv_package']
 
