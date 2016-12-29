@@ -24,23 +24,5 @@ function python::virtualenv_name() {
         }
       }
     }
-    'FreeBSD': {
-      if $::python::version == 'system' {
-        $virtualenv_package = "py27-virtualenv"
-      } elsif $::python::version =~ /^[23].*/ {
-        $virtualenv_package = "py${::python::version}-virtualenv"
-      } else {
-        $virtualenv_package = undef
-      }
-    }
-    'OpenBSD': {
-      if $::python::version == 'system' or $::python::version =~ /^[2].*/ {
-        $virtualenv_package = "py-virtualenv"
-      } elsif $::python::version =~ /^[3].*/ {
-        $virtualenv_package = "py3-virtualenv"
-      } else {
-        $virtualenv_package = undef
-      }
-    }
   }
 }

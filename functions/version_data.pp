@@ -10,19 +10,14 @@ function python::version_data($version) {
     fail "The python version ${version} is unknown on ${facts['osfamily']}"
   }
 
-  $data = lookup('python::version_data')
+  $data_hash            = lookup('python::version_data', Hash, 'hash')
+  $defaults             = lookup('python::version_defaults')
+  $current_version_data = $data_hash.dig($version)
+  $data                 = merge($defaults, $current_version_data)
 
   # Virtualenv Data
-  $virtualenv_cmd     = $data.dig($version, 'virtualenv_cmd')
-
-  # Here to support the transition from the python::virtual_name(() function to
-  # hiera data
-  $_virtualenv_package = $data.dig($version, 'virtualenv_package')
-  if $_virtualenv_package {
-    $virtualenv_package = $_virtualenv_package
-  } else {
-    $virtualenv_package = python::virtualenv_name()
-  }
+  $virtualenv_cmd     = $data['virtualenv_cmd']
+  $virtualenv_package = $data['virtualenv_package']
 
   $blob = {
     'virtualenv_cmd'     => $virtualenv_cmd,

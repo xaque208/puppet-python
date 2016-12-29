@@ -16,4 +16,17 @@ python::version_data:
   '34':
     virtualenv_package: 'py34-virtualenv'
     virtualenv_cmd: 'virtualenv-3.4'
+  '33':
+    virtualenv_package: 'py33-virtualenv'
+    virtualenv_cmd: 'virtualenv-3.3'
+  '32':
+    virtualenv_package: 'py32-virtualenv'
+    virtualenv_cmd: 'virtualenv-3.2'
+  '27':
+    virtualenv_package: 'py27-virtualenv'
+    virtualenv_cmd: 'virtualenv-2.7'
+  'system':
+    virtualenv_package: 'py27-virtualenv'
+    virtualenv_cmd: 'virtualenv-2.7'
+
 

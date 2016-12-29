@@ -3,4 +3,8 @@ python::version: '3'
 python::valid_versions:
   - '3'
 python::use_epel: true
-python::version_data: {}
+python::version_data:
+  '3':
+    virtualenv_package: 'python3-virtualenv'
+  '34':
+    virtualenv_package: 'python3-virtualenv'
