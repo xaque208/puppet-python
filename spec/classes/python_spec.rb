@@ -204,7 +204,7 @@ describe 'python' do
             :version => three_version,
           }}
 
-          case facts[:operatingsystem]
+          case facts[:osfamily]
           when 'Debian'
             it { is_expected.to contain_package('python3-virtualenv') }
 
@@ -229,9 +229,10 @@ describe 'python' do
             :version => three_version,
           }}
 
-          case facts[:operatingsystem]
+          case facts[:osfamily]
           when 'RedHat'
             it { is_expected.to contain_package("virtualenv").with_provider('pip3') }
+            it { is_expected.to_not contain_package("python3-virtualenv") }
 
           when 'FreeBSD'
             it { is_expected.to contain_package("py34-virtualenv") }

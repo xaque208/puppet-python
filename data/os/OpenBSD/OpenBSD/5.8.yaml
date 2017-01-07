@@ -3,3 +3,12 @@ python::version: '3.4.3'
 python::valid_versions:
   - '2.7.10'
   - '3.4.3'
+
+python::version_data:
+  '3.4.3':
+    virtualenv_package: 'py3-virtualenv'
+    virtualenv_cmd: 'virtualenv-3'
+  '2.7.10':
+    virtualenv_package: 'py-virtualenv'
+    virtualenv_cmd: 'virtualenv'
+
