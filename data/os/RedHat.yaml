@@ -5,6 +5,6 @@ python::valid_versions:
 python::use_epel: true
 python::version_data:
   '3':
-    virtualenv_package: 'python3-virtualenv'
+    virtualenv_package: 'virtualenv'
   '34':
-    virtualenv_package: 'python3-virtualenv'
+    virtualenv_package: 'virtualenv'
