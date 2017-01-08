@@ -1,5 +1,9 @@
 ## Unreleased
 
+## 2017-01-07 2.4.3
+ - Update data for virtualenv information per platform
+ - Add tests for virtulaenv define
+
 ## 2016-09-04 2.4.2
  - Fixes for OpenBSD package names
 
