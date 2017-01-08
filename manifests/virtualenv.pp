@@ -16,9 +16,6 @@
 # @param venv_dir
 #  Directory to install virtualenv to. Default: $name
 #
-# @param distribute
-#  Include distribute in the virtualenv. Default: true
-#
 # @param index
 #  Base URL of Python package index. Default: none (http://pypi.python.org/simple/)
 #
@@ -65,7 +62,6 @@ define python::virtualenv (
   Boolean $requirements  = false,
   Boolean $systempkgs    = false,
   String $venv_dir       = $name,
-  Boolean $distribute    = true,
   Boolean $index         = false,
   String $owner          = 'root',
   String $group          = '0',
@@ -131,22 +127,10 @@ define python::virtualenv (
       false   => undef,
     }
 
-    $distribute_pkg = $distribute ? {
-      true     => 'distribute',
-      default  => 'setuptools',
-    }
-
     $pypi_index = $index ? {
       false   => undef,
       default => "-i ${index}",
     }
-
-    # Python 2.6 and older does not support setuptools/distribute > 0.8 which
-    # is required for pip wheel support, pip therefor requires --no-use-wheel flag
-    # if the # pip version is more recent than 1.4.1 but using an old python or
-    # setuputils/distribute version
-    # To check for this we test for wheel parameter using help and then using
-    # version, this makes sure we only use wheels if they are supported
 
     file { $venv_dir:
       ensure => directory,
@@ -165,7 +149,7 @@ define python::virtualenv (
       "${venv_dir} &&",
       "${pip_cmd} wheel --help > /dev/null 2>&1 &&",
       "{ ${pip_cmd} wheel --version > /dev/null 2>&1 || wheel_support_flag='--no-use-wheel'; };",
-      "{ ${pip_cmd} --log ${venv_dir}/pip.log install ${pypi_index} ${proxy_flag} \$wheel_support_flag --upgrade pip ${distribute_pkg} || ${pip_cmd} --log ${venv_dir}/pip.log install ${pypi_index} ${proxy_flag}  --upgrade pip ${distribute_pkg} ;}",
+      "{ ${pip_cmd} --log ${venv_dir}/pip.log install ${pypi_index} ${proxy_flag} \$wheel_support_flag --upgrade pip setuptools || ${pip_cmd} --log ${venv_dir}/pip.log install ${pypi_index} ${proxy_flag}  --upgrade pip setuptools ;}",
     ]
 
     exec { "python_virtualenv_${venv_dir}":

@@ -40,9 +40,6 @@ class python::install {
     'OpenBSD': {
       package { $python_package: ensure => $::python::version }
     }
-    'Archlinux': {
-      package { $python_package: ensure => $::python::version }
-    }
     default: {
       package { $python_package: ensure => present }
     }

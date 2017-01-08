@@ -1,4 +1,6 @@
 ## Unreleased
+ - Drop distribute support now that its been merged into setuptools
+ - Add support for archlinux
 
 ## 2017-01-07 2.4.3
  - Update data for virtualenv information per platform
