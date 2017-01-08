@@ -2,3 +2,5 @@
 python::version_defaults:
   virtualenv_package: 'python-virtualenv'
   virtualenv_cmd: 'virtualenv'
+  pip_package: 'python-pip'
+  pip_cmd: 'pip'

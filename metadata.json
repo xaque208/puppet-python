@@ -48,6 +48,13 @@
         "5.9",
         "5.8"
       ]
+    },
+    {
+      "operatingsystem": "Archlinux",
+      "operatingsystemrelease": [
+        "3.17.1-1-ARCH",
+        "4.8.13-1-ARCH"
+      ]
     }
   ],
   "requirements": [

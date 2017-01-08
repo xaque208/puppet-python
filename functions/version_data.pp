@@ -19,8 +19,14 @@ function python::version_data($version) {
   $virtualenv_cmd     = $data['virtualenv_cmd']
   $virtualenv_package = $data['virtualenv_package']
 
+  # Pip Data
+  $pip_cmd     = $data['pip_cmd']
+  $pip_package = $data['pip_package']
+
   $blob = {
     'virtualenv_cmd'     => $virtualenv_cmd,
     'virtualenv_package' => $virtualenv_package,
+    'pip_cmd'            => $pip_cmd,
+    'pip_package'        => $pip_package,
   }
 }

@@ -8,7 +8,11 @@ python::version_data:
   '3.4.3':
     virtualenv_package: 'py3-virtualenv'
     virtualenv_cmd: 'virtualenv-3'
+    pip_package: 'py3-pip'
+    pip_cmd: 'pip3.4'
   '2.7.10':
     virtualenv_package: 'py-virtualenv'
     virtualenv_cmd: 'virtualenv'
+    pip_package: 'py-pip'
+    pip_cmd: 'pip2.7'
 
