@@ -50,11 +50,7 @@
       ]
     },
     {
-      "operatingsystem": "Archlinux",
-      "operatingsystemrelease": [
-        "3.17.1-1-ARCH",
-        "4.8.13-1-ARCH"
-      ]
+      "operatingsystem": "Archlinux"
     }
   ],
   "requirements": [
