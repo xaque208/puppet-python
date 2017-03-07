@@ -16,7 +16,8 @@ describe 'python' do
         end
 
         it { is_expected.to compile.with_all_deps }
-        it { is_expected.to contain_class('python::install') }
+        it { is_expected.to contain_class("python::install") }
+        it { is_expected.to contain_class("python::config") }
 
         context 'with dev' do
           let(:params) do
