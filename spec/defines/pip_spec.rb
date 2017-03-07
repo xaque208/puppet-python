@@ -16,14 +16,10 @@ describe 'python::pip', type: :define do
       }
     end
 
-    describe 'virtualenv as' do
-      context 'fails with non qualified path' do
-        let(:params) { { virtualenv: 'venv' } }
-        it { is_expected.to raise_error(%r{"venv" is not an absolute path.}) }
-      end
-      context 'suceeds with qualified path' do
-        let(:params) { { virtualenv: '/opt/venv' } }
-        it { is_expected.to contain_exec('pip_install_rpyc').with_cwd('/opt/venv') }
+    describe "virtualenv as" do
+      context "suceeds with qualified path" do
+        let (:params) {{ :virtualenv => "/opt/venv" }}
+        it { is_expected.to contain_exec("pip_install_rpyc").with_cwd('/opt/venv') }
       end
       context 'defaults to system' do
         let(:params) { {} }

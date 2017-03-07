@@ -19,19 +19,19 @@
 #   }
 #
 define python::pip (
-  $pkgname        = $name,
-  $ensure         = present,
-  $virtualenv     = 'system',
-  $url            = false,
-  $owner          = 'root',
-  $proxy          = false,
-  $egg            = false,
-  $editable       = false,
-  $environment    = [],
-  $timeout        = 1800,
-  $install_args   = '',
-  $uninstall_args = '',
-  $log_dir        = '/tmp',
+  $pkgname                                                  = $name,
+  $ensure                                                   = present,
+  Variant[Stdlib::Absolutepath, Enum['system']] $virtualenv = 'system',
+  $url                                                      = false,
+  $owner                                                    = 'root',
+  $proxy                                                    = false,
+  $egg                                                      = false,
+  $editable                                                 = false,
+  $environment                                              = [],
+  $timeout                                                  = 1800,
+  $install_args                                             = '',
+  $uninstall_args                                           = '',
+  $log_dir                                                  = '/tmp',
 ) {
 
   # Parameter validation
@@ -47,8 +47,6 @@ define python::pip (
     'system' => '/',
     default  => $virtualenv,
   }
-
-  validate_absolute_path($cwd)
 
   $log = $virtualenv ? {
     'system' => $log_dir,
