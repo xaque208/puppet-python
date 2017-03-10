@@ -29,7 +29,7 @@ class python::install {
   }
 
   if $python::use_epel == true {
-    include 'epel'
+    include '::epel'
     Class['epel'] -> Package[$python_package]
   }
 

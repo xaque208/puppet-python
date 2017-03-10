@@ -1,9 +1,10 @@
 def three_versions(facts)
-  versions = case facts[:osfamily]
+  versions =
+    case facts[:osfamily]
     when 'FreeBSD'
       case facts[:operatingsystemmajrelease]
       when '10'
-        ['34', '35']
+        %w(34 35)
 
       end
     when 'OpenBSD'
@@ -12,10 +13,10 @@ def three_versions(facts)
         '3.4.3'
 
       when '5.9'
-          '3.4.4'
+        '3.4.4'
 
       when '6.0'
-          '3.5.2'
+        '3.5.2'
 
       end
     when 'Debian'
@@ -35,18 +36,17 @@ def three_versions(facts)
       when '7'
         '3'
 
-    when 'Archlinux'
-      '3'
+      when 'Archlinux'
+        '3'
 
       end
-    else nil
-  end
-
+    end
   Array(versions).flatten
 end
 
 def two_versions(facts)
-  versions = case facts[:osfamily]
+  versions =
+    case facts[:osfamily]
     when 'FreeBSD'
       case facts[:operatingsystemmajrelease]
       when '10'
@@ -73,9 +73,6 @@ def two_versions(facts)
       end
     when 'Archlinux'
       '2'
-
-    else nil
-  end
-
+    end
   Array(versions).flatten
 end
