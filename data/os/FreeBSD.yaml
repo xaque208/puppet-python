@@ -8,8 +8,14 @@ python::valid_versions:
   - '33'
   - '34'
   - '35'
+  - '36'
 
 python::version_data:
+  '36':
+    virtualenv_package: 'py36-virtualenv'
+    virtualenv_cmd: 'virtualenv-3.6'
+    pip_package: 'py36-pip'
+    pip_cmd: 'pip-3.6'
   '35':
     virtualenv_package: 'py35-virtualenv'
     virtualenv_cmd: 'virtualenv-3.5'
