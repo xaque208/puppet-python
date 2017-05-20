@@ -18,6 +18,9 @@ def three_versions(facts)
       when '6.0'
         '3.5.2'
 
+      when '6.1'
+        '3.6.0p0'
+
       end
     when 'Debian'
       case facts[:operatingsystemmajrelease]
@@ -63,6 +66,9 @@ def two_versions(facts)
 
       when '6.0'
         '2.7.12'
+
+      when '6.1'
+        '2.7.13p0'
 
       end
     when 'Debian'
