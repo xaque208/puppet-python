@@ -36,7 +36,7 @@ python::version_data:
     virtualenv_cmd: 'virtualenv-3.2'
     pip_package: 'py32-pip'
     pip_cmd: 'pip-3.2'
-  '27':
+  '27': &defaults
     virtualenv_package: 'py27-virtualenv'
     virtualenv_cmd: 'virtualenv-2.7'
     pip_package: 'py27-pip'
@@ -47,4 +47,4 @@ python::version_data:
     pip_package: 'py27-pip'
     pip_cmd: 'pip-2.7'
 
-
+python::version_defaults: *defaults
