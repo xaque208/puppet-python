@@ -1,5 +1,8 @@
 ## Unreleased
 
+## 2017-01-08 2.7.0
+- Update default data references for FreeBSD
+
 ## 2017-01-08 2.5.0
  - Drop distribute support now that its been merged into setuptools
  - Add initial support for Archlinux

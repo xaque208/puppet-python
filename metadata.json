@@ -1,6 +1,6 @@
 {
   "name": "zleslie-python",
-  "version": "2.6.2",
+  "version": "2.7.0",
   "author": "zleslie",
   "summary": "Python Module",
   "license": "Apache-2.0",
@@ -38,6 +38,7 @@
     {
       "operatingsystem": "FreeBSD",
       "operatingsystemrelease": [
+        "11",
         "10"
       ]
     },
