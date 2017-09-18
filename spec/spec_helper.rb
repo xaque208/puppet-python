@@ -1,7 +1,6 @@
 require 'puppetlabs_spec_helper/module_spec_helper'
 require 'rspec-puppet-facts'
 include RspecPuppetFacts
-require_relative 'version_data'
 
 if Dir.exist?(File.expand_path('../../lib', __FILE__))
   require 'coveralls'
@@ -9,8 +8,7 @@ if Dir.exist?(File.expand_path('../../lib', __FILE__))
   require 'simplecov-console'
   SimpleCov.formatters = [
     SimpleCov::Formatter::HTMLFormatter,
-    SimpleCov::Formatter::Console,
-    Coveralls::SimpleCov::Formatter
+    SimpleCov::Formatter::Console
   ]
   SimpleCov.start do
     track_files 'lib/**/*.rb'
