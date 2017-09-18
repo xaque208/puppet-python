@@ -1,4 +1,5 @@
 require 'spec_helper'
+require_relative '../version_data'
 
 describe 'python' do
   on_supported_os.each do |os, facts|
@@ -104,6 +105,7 @@ describe 'python' do
                 version: three_version
               }
             end
+
             it { is_expected.to compile.with_all_deps }
             it { is_expected.to contain_class('python::install') }
 
@@ -270,6 +272,7 @@ describe 'python' do
                 version: two_version
               }
             end
+
             it { is_expected.to compile.with_all_deps }
             it { is_expected.to contain_class('python::install') }
 

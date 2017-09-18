@@ -4,7 +4,7 @@ def three_versions(facts)
     when 'FreeBSD'
       case facts[:operatingsystemmajrelease]
       when '10'
-        %w(34 35)
+        %w[34 35]
 
       end
     when 'OpenBSD'
