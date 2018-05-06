@@ -1,3 +1,3 @@
 spec/spec_helper.rb:
-  spec_verrides:
+  spec_overrides:
     - "require_relative 'version_data'"
