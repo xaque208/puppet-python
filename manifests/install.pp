@@ -29,7 +29,7 @@ class python::install {
   }
 
   if $python::use_epel == true {
-    include '::epel'
+    include epel
     Class['epel'] -> Package[$python_package]
   }
 
@@ -38,7 +38,7 @@ class python::install {
 
   case $facts['osfamily'] {
     'OpenBSD': {
-      package { $python_package: ensure => $::python::version }
+      package { $python_package: ensure => $python::version }
     }
     default: {
       package { $python_package: ensure => present }

@@ -1,4 +1,4 @@
-class { '::python':
+class { 'python':
   pip     => false,
   version => '3',
 }
