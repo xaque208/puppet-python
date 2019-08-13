@@ -30,16 +30,10 @@
       ]
     },
     {
-      "operatingsystem": "SLES",
-      "operatingsystemrelease": [
-        "11.3"
-      ]
-    },
-    {
       "operatingsystem": "FreeBSD",
       "operatingsystemrelease": [
-        "11",
-        "10"
+        "12",
+        "11"
       ]
     },
     {
