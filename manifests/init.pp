@@ -40,10 +40,10 @@ class python (
   $version_data = python::version_data($version)
 
   # Useful variables for the default version 
-  $virtualenv_cmd = $version_data['virtualenv_cmd']
+  $virtualenv_cmd     = $version_data['virtualenv_cmd']
   $virtualenv_package = $version_data['virtualenv_package']
 
-  $pip_cmd = $version_data['pip_cmd']
+  $pip_cmd     = $version_data['pip_cmd']
   $pip_package = $version_data['pip_package']
 
   contain ::python::install

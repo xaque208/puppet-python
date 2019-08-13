@@ -11,6 +11,11 @@ python::valid_versions:
   - '36'
 
 python::version_data:
+  '37':
+    virtualenv_package: 'py37-virtualenv'
+    virtualenv_cmd: 'virtualenv-3.7'
+    pip_package: 'py37-pip'
+    pip_cmd: 'pip-3.7'
   '36':
     virtualenv_package: 'py36-virtualenv'
     virtualenv_cmd: 'virtualenv-3.6'
