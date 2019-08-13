@@ -28,9 +28,6 @@
 # @param mode
 # Optionally specify directory mode. Default: 0755
 #
-# @param [*proxy*]
-#  Proxy server to use for outbound connections. Default: none
-#
 # @param [*environment*]
 #  Additional environment variables required to install the packages. Default: none
 #
@@ -51,7 +48,6 @@
 #     ensure       => present,
 #     version      => 'system',
 #     requirements => '/var/www/project1/requirements.txt',
-#     proxy        => 'http://proxy.domain.com:3128',
 #     systempkgs   => true,
 #     index        => 'http://www.example.com/simple/'
 #   }
@@ -66,7 +62,6 @@ define python::virtualenv (
   String $owner          = 'root',
   String $group          = '0',
   String $mode           = '0755',
-  Boolean $proxy         = false,
   Array $environment     = [],
   Array $path            = [ '/bin', '/usr/bin', '/usr/sbin', '/usr/local/bin' ],
   $cwd                   = undef,
@@ -91,16 +86,6 @@ define python::virtualenv (
       $virtualenv_cmd = $virtualenv
     } else {
       $virtualenv_cmd = $::python::virtualenv_cmd
-    }
-
-    $proxy_flag = $proxy ? {
-      false    => '',
-      default  => "--proxy=${proxy}",
-    }
-
-    $proxy_command = $proxy ? {
-      false   => '',
-      default => "&& export http_proxy=${proxy}",
     }
 
     # Virtualenv versions prior to 1.7 do not support the
@@ -142,14 +127,13 @@ define python::virtualenv (
     $pip_cmd = "${venv_dir}/bin/pip"
 
     $virtualenv_create_args = [
-      "true ${proxy_command} &&",
       $virtualenv_cmd,
       $system_pkgs_flag,
       "-p ${python}",
       "${venv_dir} &&",
       "${pip_cmd} wheel --help > /dev/null 2>&1 &&",
       "{ ${pip_cmd} wheel --version > /dev/null 2>&1 || wheel_support_flag='--no-use-wheel'; };",
-      "{ ${pip_cmd} --log ${venv_dir}/pip.log install ${pypi_index} ${proxy_flag} \$wheel_support_flag --upgrade pip setuptools || ${pip_cmd} --log ${venv_dir}/pip.log install ${pypi_index} ${proxy_flag}  --upgrade pip setuptools ;}",
+      "{ ${pip_cmd} --log ${venv_dir}/pip.log install ${pypi_index} \$wheel_support_flag --upgrade pip setuptools || ${pip_cmd} --log ${venv_dir}/pip.log install ${pypi_index}  --upgrade pip setuptools ;}",
     ]
 
     exec { "python_virtualenv_${venv_dir}":
@@ -159,13 +143,14 @@ define python::virtualenv (
       path        => $path,
       cwd         => '/tmp',
       environment => $environment,
-      unless      => "grep '^[\\t ]*VIRTUAL_ENV=[\\\\'\\\"]*${venv_dir}[\\\"\\\\'][\\t ]*$' ${venv_dir}/bin/activate", #Unless activate exists and VIRTUAL_ENV is correct we re-create the virtualenv
+      #Unless activate exists and VIRTUAL_ENV is correct we re-create the virtualenv
+      unless      => "grep '^[\\t ]*VIRTUAL_ENV=[\\\\'\\\"]*${venv_dir}[\\\"\\\\'][\\t ]*$' ${venv_dir}/bin/activate",
       require     => File[$venv_dir],
     }
 
     if $requirements {
       exec { "python_requirements_initial_install_${requirements}_${venv_dir}":
-        command     => "${pip_cmd} wheel --help > /dev/null 2>&1 && { ${pip_cmd} wheel --version > /dev/null 2>&1 || wheel_support_flag='--no-use-wheel'; } ; ${pip_cmd} --log ${venv_dir}/pip.log install ${pypi_index} ${proxy_flag} \$wheel_support_flag -r ${requirements} ${extra_pip_args}",
+        command     => "${pip_cmd} wheel --help > /dev/null 2>&1 && { ${pip_cmd} wheel --version > /dev/null 2>&1 || wheel_support_flag='--no-use-wheel'; } ; ${pip_cmd} --log ${venv_dir}/pip.log install ${pypi_index} \$wheel_support_flag -r ${requirements} ${extra_pip_args}",
         refreshonly => true,
         timeout     => $timeout,
         user        => $owner,
@@ -177,7 +162,6 @@ define python::virtualenv (
       python::requirements { "${requirements}_${venv_dir}":
         requirements   => $requirements,
         virtualenv     => $venv_dir,
-        proxy          => $proxy,
         owner          => $owner,
         group          => $group,
         cwd            => $cwd,
