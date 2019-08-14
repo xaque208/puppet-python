@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe 'python::pip', type: :define do
   let(:title) { 'rpyc' }
+
   context 'on Debian OS' do
     let :facts do
       {
@@ -19,13 +20,14 @@ describe 'python::pip', type: :define do
     describe 'virtualenv as' do
       context 'suceeds with qualified path' do
         let(:params) { { virtualenv: '/opt/venv' } }
+
         it { is_expected.to contain_exec('pip_install_rpyc').with_cwd('/opt/venv') }
       end
       context 'defaults to system' do
         let(:params) { {} }
+
         it { is_expected.to contain_exec('pip_install_rpyc').with_cwd('/') }
       end
     end
-
   end
 end
