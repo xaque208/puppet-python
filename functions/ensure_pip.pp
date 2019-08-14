@@ -1,6 +1,6 @@
 function python::ensure_pip($ensure) {
 
-  $pip_package = $::python::pip_package
+  $pip_package = $python::pip_package
 
   if $pip_package {
     package { $pip_package:
@@ -12,7 +12,7 @@ function python::ensure_pip($ensure) {
   if $facts['osfamily'] == 'RedHat' {
     if $ensure == present {
       if $python::use_epel == true {
-        include '::epel'
+        include 'epel'
       }
     }
 

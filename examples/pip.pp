@@ -1,4 +1,4 @@
-class { '::python':
+class { 'python':
   version    => 'system',
   dev        => true,
   virtualenv => true,
@@ -6,5 +6,4 @@ class { '::python':
 
 python::pip { 'flask':
   virtualenv => '/var/www/project1',
-  proxy      => 'http://proxy.domain.com:3128',
 }

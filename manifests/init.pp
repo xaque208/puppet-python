@@ -46,6 +46,6 @@ class python (
   $pip_cmd     = $version_data['pip_cmd']
   $pip_package = $version_data['pip_package']
 
-  contain ::python::install
-  contain ::python::config
+  contain python::install
+  contain python::config
 }

@@ -69,9 +69,9 @@ define python::virtualenv (
   String $extra_pip_args = '',
   $virtualenv            = undef,
 ) {
-  include ::python
+  include python
 
-  unless $::python::virtualenv {
+  unless $python::virtualenv {
     fail('to use a virtualenv, you must set $python::virtualenv to true')
   }
 
@@ -85,7 +85,7 @@ define python::virtualenv (
     if $virtualenv {
       $virtualenv_cmd = $virtualenv
     } else {
-      $virtualenv_cmd = $::python::virtualenv_cmd
+      $virtualenv_cmd = $python::virtualenv_cmd
     }
 
     # Virtualenv versions prior to 1.7 do not support the
