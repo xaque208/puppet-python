@@ -277,6 +277,9 @@ Style/PreferredHashMethods:
 Layout/DotPosition:
   EnforcedStyle: trailing
 
+RSpec/MessageExpectation:
+  EnforcedStyle: expect
+
 Style/DoubleNegation:
   Enabled: True
 
