@@ -1,3 +1,6 @@
 spec/spec_helper.rb:
   spec_overrides:
     - "require_relative 'version_data'"
+.rubocop.yml:
+  cops:
+    RSpec/MultipleExpectations: false
