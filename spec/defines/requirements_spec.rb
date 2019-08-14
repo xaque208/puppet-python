@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe 'python::requirements', type: :define do
   let(:title) { '/requirements.txt' }
+
   context 'on Debian OS' do
     let :facts do
       {
@@ -19,6 +20,7 @@ describe 'python::requirements', type: :define do
     describe 'requirements as' do
       context '/requirements.txt' do
         let(:params) { { requirements: '/requirements.txt' } }
+
         it { is_expected.to contain_file('/requirements.txt').with_mode('0644') }
       end
 
@@ -30,6 +32,7 @@ describe 'python::requirements', type: :define do
               group: 'bob'
             }
           end
+
           it do
             expect do
               is_expected.to compile

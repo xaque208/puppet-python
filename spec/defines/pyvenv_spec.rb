@@ -15,6 +15,7 @@ describe 'python::pyvenv', type: :define do
           ensure: 'absent'
         }
       end
+
       it do
         is_expected.to contain_file('/opt/env').with_ensure('absent').with_purge(true)
       end
