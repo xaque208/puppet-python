@@ -18,6 +18,9 @@ AllCops:
 Lint/ConditionPosition:
   Enabled: True
 
+RSpec/MultipleExpectations:
+  Enabled: false
+
 Lint/ElseLayout:
   Enabled: True
 
@@ -279,6 +282,9 @@ Layout/DotPosition:
 
 RSpec/MessageExpectation:
   EnforcedStyle: expect
+
+RSpec/MessageSpies:
+  EnforcedStyle: receive
 
 Style/DoubleNegation:
   Enabled: True
