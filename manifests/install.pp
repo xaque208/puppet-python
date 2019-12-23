@@ -36,7 +36,7 @@ class python::install {
   python::ensure_pip($pip_ensure)
   python::ensure_virtualenv($virtualenv_ensure)
 
-  case $facts['osfamily'] {
+  case $facts['os']['family'] {
     'OpenBSD': {
       package { $python_package: ensure => $python::version }
     }

@@ -3,7 +3,7 @@ function python::ensure_virtualenv($ensure) {
   $virtualenv_package = $::python::virtualenv_package
 
   if $virtualenv_package {
-    if $facts['osfamily'] == 'RedHat' and $::python::version =~ /^3/ {
+    if $facts['os']['family'] == 'RedHat' and $::python::version =~ /^3/ {
       if $ensure == 'present' {
         python::require_pip()
         package { $virtualenv_package:

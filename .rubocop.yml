@@ -14,12 +14,11 @@ AllCops:
     - Guardfile
     - Vagrantfile
 
+RSpec/MultipleExpectations:
+  Enabled: false
 
 Lint/ConditionPosition:
   Enabled: True
-
-RSpec/MultipleExpectations:
-  Enabled: false
 
 Lint/ElseLayout:
   Enabled: True
@@ -279,12 +278,6 @@ Style/PreferredHashMethods:
 
 Layout/DotPosition:
   EnforcedStyle: trailing
-
-RSpec/MessageExpectation:
-  EnforcedStyle: expect
-
-RSpec/MessageSpies:
-  EnforcedStyle: receive
 
 Style/DoubleNegation:
   Enabled: True
@@ -555,3 +548,9 @@ Style/FormatStringToken:
 # are located.
 RSpec/FilePath:
   Enabled: false
+
+RSpec/MessageExpectation:
+  EnforcedStyle: expect
+
+RSpec/MessageSpies:
+  EnforcedStyle: receive

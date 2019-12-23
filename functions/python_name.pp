@@ -2,7 +2,7 @@
 #
 function python::python_name() {
 
-  case $facts['osfamily'] {
+  case $facts['os']['family'] {
     'OpenBSD': {
 
       # Installing Python on OpenBSD is always done with the package
