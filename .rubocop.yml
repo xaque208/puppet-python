@@ -548,9 +548,3 @@ Style/FormatStringToken:
 # are located.
 RSpec/FilePath:
   Enabled: false
-
-RSpec/MessageExpectation:
-  EnforcedStyle: expect
-
-RSpec/MessageSpies:
-  EnforcedStyle: receive
