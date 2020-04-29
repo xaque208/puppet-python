@@ -34,7 +34,7 @@ class python (
 ) {
 
   unless $version == 'system' or $version in $valid_versions {
-    fail("Python version ${version} not supported on ${facts['os']['name']}: ${valid_versions} ${facts['os']}")
+    fail("Python version ${version} not supported on ${facts['os']['family']}: ${valid_versions} ${facts['os']['family']}")
   }
 
   $version_data = python::version_data($version)
