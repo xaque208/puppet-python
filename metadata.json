@@ -46,13 +46,16 @@
       ]
     },
     {
-      "operatingsystem": "Archlinux"
+      "operatingsystem": "Archlinux",
+      "operatingsystemrelease": [
+        "5"
+      ]
     }
   ],
   "requirements": [
     {
       "name": "puppet",
-      "version_requirement": ">= 4.8.2 < 5.0.0"
+      "version_requirement": ">= 4.8.2 < 7.0.0"
     }
   ],
   "dependencies": [
