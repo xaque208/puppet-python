@@ -7,7 +7,7 @@
 
 function python::version_data($version) {
   unless $version in $python::valid_versions or $version == 'system' {
-    fail "The python version ${version} is unknown on ${facts['osfamily']}"
+    fail "The python version ${version} is unknown on ${facts['os']['family']}"
   }
 
   $data_hash            = lookup('python::version_data', Hash, 'hash')
