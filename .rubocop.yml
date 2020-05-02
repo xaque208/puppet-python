@@ -553,4 +553,4 @@ RSpec/MessageExpectation:
   EnforcedStyle: expect
 
 RSpec/MessageSpies:
-  EnforcedStyle: receive
+  EnforcedStyle: have_received

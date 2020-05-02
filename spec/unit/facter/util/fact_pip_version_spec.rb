@@ -16,15 +16,15 @@ EOS
   describe 'pip_version' do
     context 'returns pip version when pip present' do
       it do
-        expect(Facter::Util::Resolution).to receive(:which).with('pip').and_return(true)
-        expect(Facter::Util::Resolution).to receive(:exec).with('pip --version 2>&1').and_return(pip_version_output)
+        expect(Facter::Util::Resolution).to have_received(:which).with('pip').and_return(true)
+        expect(Facter::Util::Resolution).to have_received(:exec).with('pip --version 2>&1').and_return(pip_version_output)
         Facter.value(:pip_version).should == '6.0.6'
       end
     end
 
     context 'returns nil when pip not present' do
       it do
-        expect(Facter::Util::Resolution).to receive(:which).with('pip').and_return(false)
+        expect(Facter::Util::Resolution).to have_received(:which).with('pip').and_return(false)
         Facter.value(:pip_version).should.nil?
       end
     end
