@@ -4,3 +4,6 @@ spec/spec_helper.rb:
 .rubocop.yml:
   cops:
     RSpec/MultipleExpectations: false
+  extra_configs:
+    Style/OpMethod:
+      Enabled: True
