@@ -545,5 +545,7 @@ Style/FormatStringToken:
 RSpec/FilePath:
   Enabled: false
 
---- 
+---
+Style/OpMethod:
+  Enabled: true
 
