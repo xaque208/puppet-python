@@ -16,8 +16,8 @@ EOS
   describe 'pip_version' do
     context 'returns pip version when pip present' do
       it do
-        expect(Facter::Util::Resolution).to receive(:which).with('pip').and_return(true)
-        expect(Facter::Util::Resolution).to receive(:exec).with('pip --version 2>&1').and_return(pip_version_output)
+        allow(Facter::Util::Resolution).to receive(:which).with('pip') { true }
+        allow(Facter::Util::Resolution).to receive(:exec).with('pip --version 2>&1') { pip_version_output }
         Facter.value(:pip_version).should == '6.0.6'
       end
     end
