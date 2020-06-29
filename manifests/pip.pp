@@ -30,7 +30,6 @@ define python::pip (
   $uninstall_args                                           = '',
   $log_dir                                                  = '/tmp',
 ) {
-
   # Parameter validation
   if ! $virtualenv {
     fail('python::pip: virtualenv parameter must not be empty')
@@ -109,27 +108,27 @@ define python::pip (
 
   # Explicit version out of VCS when PIP supported URL is provided
   if $source =~ /^(git\+|hg\+|bzr\+|svn\+)(http|https|ssh|svn|sftp|ftp|lp)(:\/\/).+$/ {
-      if $ensure != present and $ensure != latest {
-        exec { "pip_install_${name}":
-          command     => "${pip_env} wheel --help > /dev/null 2>&1 && { ${pip_env} wheel --version > /dev/null 2>&1 || wheel_support_flag='--no-use-wheel'; } ; { ${pip_env} --log ${log}/pip.log install ${install_args} \$wheel_support_flag ${install_args} ${install_editable} ${source}@${ensure}#egg=${egg_name} || ${pip_env} --log ${log}/pip.log install ${install_args} ${install_args} ${install_editable} ${source}@${ensure}#egg=${egg_name} ;}",
-          unless      => "${pip_env} freeze | grep -i -e ${grep_regex}",
-          user        => $owner,
-          cwd         => $cwd,
-          environment => $environment,
-          path        => ['/usr/local/bin','/usr/bin','/bin', '/usr/sbin'],
-          timeout     => $timeout,
-          }
-        }
+    if $ensure != present and $ensure != latest {
+      exec { "pip_install_${name}":
+        command     => "${pip_env} wheel --help > /dev/null 2>&1 && { ${pip_env} wheel --version > /dev/null 2>&1 || wheel_support_flag='--no-use-wheel'; } ; { ${pip_env} --log ${log}/pip.log install ${install_args} \$wheel_support_flag ${install_args} ${install_editable} ${source}@${ensure}#egg=${egg_name} || ${pip_env} --log ${log}/pip.log install ${install_args} ${install_args} ${install_editable} ${source}@${ensure}#egg=${egg_name} ;}",
+        unless      => "${pip_env} freeze | grep -i -e ${grep_regex}",
+        user        => $owner,
+        cwd         => $cwd,
+        environment => $environment,
+        path        => ['/usr/local/bin','/usr/bin','/bin', '/usr/sbin'],
+        timeout     => $timeout,
+      }
+    }
     else {
-          exec { "pip_install_${name}":
-            command     => "${pip_env} wheel --help > /dev/null 2>&1 && { ${pip_env} wheel --version > /dev/null 2>&1 || wheel_support_flag='--no-use-wheel'; } ; { ${pip_env} --log ${log}/pip.log install ${install_args} \$wheel_support_flag ${install_args} ${install_editable} ${source} || ${pip_env} --log ${log}/pip.log install ${install_args} ${install_args} ${install_editable} ${source} ;}",
-            unless      => "${pip_env} freeze | grep -i -e ${grep_regex}",
-            user        => $owner,
-            cwd         => $cwd,
-            environment => $environment,
-            path        => ['/usr/local/bin','/usr/bin','/bin', '/usr/sbin'],
-            timeout     => $timeout,
-        }
+      exec { "pip_install_${name}":
+        command     => "${pip_env} wheel --help > /dev/null 2>&1 && { ${pip_env} wheel --version > /dev/null 2>&1 || wheel_support_flag='--no-use-wheel'; } ; { ${pip_env} --log ${log}/pip.log install ${install_args} \$wheel_support_flag ${install_args} ${install_editable} ${source} || ${pip_env} --log ${log}/pip.log install ${install_args} ${install_args} ${install_editable} ${source} ;}",
+        unless      => "${pip_env} freeze | grep -i -e ${grep_regex}",
+        user        => $owner,
+        cwd         => $cwd,
+        environment => $environment,
+        path        => ['/usr/local/bin','/usr/bin','/bin', '/usr/sbin'],
+        timeout     => $timeout,
+      }
     }
   }
   else {

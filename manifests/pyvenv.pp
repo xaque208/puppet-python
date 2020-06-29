@@ -34,12 +34,10 @@ define python::pyvenv (
   $owner       = 'root',
   $group       = '0',
   $mode        = '0755',
-  $path        = [ '/bin', '/usr/bin', '/usr/sbin', '/usr/local/bin' ],
+  $path        = ['/bin', '/usr/bin', '/usr/sbin', '/usr/local/bin'],
   $environment = [],
 ) {
-
   if $ensure == 'present' {
-
     $virtualenv_cmd = $version ? {
       'system' => 'pyvenv',
       default  => "pyvenv-${version}",

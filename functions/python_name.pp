@@ -1,10 +1,8 @@
 # This function contains the python package name determination logic.
 #
 function python::python_name() {
-
   case $facts['os']['family'] {
     'OpenBSD': {
-
       # Installing Python on OpenBSD is always done with the package
       # name 'python'.  The ensure value determines the version.
 

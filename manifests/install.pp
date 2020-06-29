@@ -5,7 +5,6 @@
 #   include python::install
 #
 class python::install {
-
   $python_package = python::python_name()
 
   $python_dev = python::dev_name()
