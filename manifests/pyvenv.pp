@@ -61,6 +61,7 @@ define python::pyvenv (
     exec { "python_virtualenv_${venv_dir}":
       command     => "${virtualenv_cmd} --clear ${system_pkgs_flag} ${venv_dir}",
       user        => $owner,
+      group       => $group,
       creates     => "${venv_dir}/bin/activate",
       path        => $path,
       cwd         => '/tmp',
