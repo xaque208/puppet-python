@@ -58,7 +58,6 @@ define python::requirements (
   $log_dir                = '/tmp',
   $timeout                = 1800,
 ) {
-
   if $virtualenv == 'system' and ($owner != 'root' or $group != '0') {
     fail('python::pip: root user must be used when virtualenv is system')
   }
@@ -95,7 +94,7 @@ define python::requirements (
   # the same requirements file.
   if !defined(File[$requirements]) {
     file { $requirements:
-      ensure  => present,
+      ensure  => file,
       mode    => '0644',
       owner   => $owner_real,
       group   => $group_real,
@@ -114,5 +113,4 @@ define python::requirements (
     subscribe   => File[$requirements],
     environment => $environment,
   }
-
 }

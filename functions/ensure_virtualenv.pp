@@ -1,5 +1,4 @@
 function python::ensure_virtualenv($ensure) {
-
   $virtualenv_package = $::python::virtualenv_package
 
   if $virtualenv_package {

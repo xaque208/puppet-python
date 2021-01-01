@@ -63,7 +63,7 @@ define python::virtualenv (
   String $group          = '0',
   String $mode           = '0755',
   Array $environment     = [],
-  Array $path            = [ '/bin', '/usr/bin', '/usr/sbin', '/usr/local/bin' ],
+  Array $path            = ['/bin', '/usr/bin', '/usr/sbin', '/usr/local/bin'],
   $cwd                   = undef,
   Integer $timeout       = 1800,
   String $extra_pip_args = '',

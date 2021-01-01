@@ -1,5 +1,4 @@
 function python::ensure_pip($ensure) {
-
   $pip_package = $python::pip_package
 
   if $pip_package {
@@ -23,6 +22,5 @@ function python::ensure_pip($ensure) {
         require => Package[$python::install::python_package],
       }
     }
-
   }
 }

@@ -32,7 +32,6 @@ class python (
   Array $valid_versions = [],
   Boolean $use_epel     = false,
 ) {
-
   unless $version == 'system' or $version in $valid_versions {
     fail("Python version ${version} not supported on ${facts['os']['family']}: ${valid_versions} ${facts['os']['family']}")
   }
